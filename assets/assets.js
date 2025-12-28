@@ -46,6 +46,15 @@ import product_details_page_apple_earphone_image2 from "./product_details_page_a
 import product_details_page_apple_earphone_image3 from "./product_details_page_apple_earphone_image3.png";
 import product_details_page_apple_earphone_image4 from "./product_details_page_apple_earphone_image4.png";
 import product_details_page_apple_earphone_image5 from "./product_details_page_apple_earphone_image5.png";
+import aroha_hero_botanical from "./aroha/aroha_hero_botanical.svg";
+import aroha_hero_ritual from "./aroha/aroha_hero_ritual.svg";
+import aroha_hero_horseshoe from "./aroha/aroha_hero_horseshoe.svg";
+import aroha_product_balm from "./aroha/aroha_product_balm.svg";
+import aroha_product_scrub from "./aroha/aroha_product_scrub.svg";
+import aroha_product_tincture from "./aroha/aroha_product_tincture.svg";
+import aroha_product_tea from "./aroha/aroha_product_tea.svg";
+import aroha_product_soap from "./aroha/aroha_product_soap.svg";
+import aroha_product_horseshoe from "./aroha/aroha_product_horseshoe.svg";
 
 export const assets = {
   logo,
@@ -95,7 +104,16 @@ export const assets = {
   product_details_page_apple_earphone_image3,
   product_details_page_apple_earphone_image4,
   product_details_page_apple_earphone_image5,
-  checkmark
+  checkmark,
+  aroha_hero_botanical,
+  aroha_hero_ritual,
+  aroha_hero_horseshoe,
+  aroha_product_balm,
+  aroha_product_scrub,
+  aroha_product_tincture,
+  aroha_product_tea,
+  aroha_product_soap,
+  aroha_product_horseshoe
 };
 
 export const BagIcon = () => {
@@ -132,154 +150,203 @@ export const HomeIcon = () => (
 
 export const productsDummyData = [
   {
-    "_id": "67a1f4e43f34a77b6dde9144",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Apple AirPods Pro 2nd gen",
-    "description": "Apple AirPods Pro (2nd Gen) with MagSafe Case (USB-C) provide excellent sound, active noise cancellation, and a comfortable fit. The USB-C case ensures quick charging, and they pair seamlessly with Apple devices for an effortless audio experience.",
-    "price": 499.99,
-    "offerPrice": 399.99,
+    "_id": "balm-kawakawa",
+    "userId": "aroha-apothecary",
+    "name": "Kawakawa Balm",
+    "description": "Soothing balm crafted for dry or tender skin with kawakawa and calendula.",
+    "price": 18,
+    "offerPrice": 15,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/k4dafzhwhgcn5tnoylrw.webp",
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/j212frakb8hdrhvhajhg.webp",
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/imwuugqxsajuwqpkegb5.webp",
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/k1oqaslw5tb3ebw01vvj.webp"
+      assets.aroha_product_balm,
+      assets.aroha_product_balm,
+      assets.aroha_product_balm
     ],
-    "category": "Earphone",
+    "category": "Balms",
     "date": 1738667236865,
     "__v": 0
   },
   {
-    "_id": "67a1f52e3f34a77b6dde914a",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Bose QuietComfort 45",
-    "description": "The Bose QuietComfort 45 headphones are engineered for exceptional sound quality and unparalleled noise cancellation. With a 24-hour battery life and comfortable, lightweight design, these headphones deliver premium audio for any environment. Whether on a flight, in the office, or at home, the Bose QC45 blocks out distractions, offering an immersive listening experience.",
-    "price": 429.99,
-    "offerPrice": 329.99,
+    "_id": "balm-calendula",
+    "userId": "aroha-apothecary",
+    "name": "Calendula Balm",
+    "description": "Gentle, golden balm for everyday nourishment and sensitive skin.",
+    "price": 18,
+    "offerPrice": 15,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/m16coelz8ivkk9f0nwrz.webp"
+      assets.aroha_product_balm,
+      assets.aroha_product_balm,
+      assets.aroha_product_balm
     ],
-    "category": "Headphone",
+    "category": "Balms",
     "date": 1738667310300,
     "__v": 0
   },
   {
-    "_id": "67a1f5663f34a77b6dde914c",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Samsung Galaxy S23",
-    "description": "The Samsung Galaxy S23 offers an all-encompassing mobile experience with its advanced AMOLED display, offering vibrant visuals and smooth interactions. Equipped with top-of-the-line fitness tracking features and cutting-edge technology, this phone delivers outstanding performance. With powerful hardware, a sleek design, and long battery life, the S23 is perfect for those who demand the best in mobile innovation.",
-    "price": 899.99,
-    "offerPrice": 799.99,
+    "_id": "lip-balm-hemp-honey",
+    "userId": "aroha-apothecary",
+    "name": "Hemp + Honey Lip Balm",
+    "description": "A nourishing lip balm with hemp oil and honey for soft, protected lips.",
+    "price": 10,
+    "offerPrice": 8,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/xjd4eprpwqs7odbera1w.webp"
+      assets.aroha_product_balm,
+      assets.aroha_product_balm,
+      assets.aroha_product_balm
     ],
-    "category": "Smartphone",
+    "category": "Lip Balm",
     "date": 1738667366224,
     "__v": 0
   },
   {
-    "_id": "67a1f5993f34a77b6dde914e",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Garmin Venu 2",
-    "description": "The Garmin Venu 2 smartwatch blends advanced fitness tracking with sophisticated design, offering a wealth of features such as heart rate monitoring, GPS, and sleep tracking. Built with a 24-hour battery life, this watch is ideal for fitness enthusiasts and anyone looking to enhance their daily lifestyle. With a stunning AMOLED display and customizable watch faces, the Venu 2 combines technology with style seamlessly.",
-    "price": 399.99,
-    "offerPrice": 349.99,
+    "_id": "scrub-rose-sugar",
+    "userId": "aroha-apothecary",
+    "name": "Rose Sugar Scrub",
+    "description": "An exfoliating sugar scrub with rose and coconut to smooth and soften.",
+    "price": 18,
+    "offerPrice": 15,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/hdfi4u3fmprazpnrnaga.webp"
+      assets.aroha_product_scrub,
+      assets.aroha_product_scrub,
+      assets.aroha_product_scrub
     ],
-    "category": "Earphone",
+    "category": "Scrubs",
     "date": 1738667417511,
     "__v": 0
   },
   {
-    "_id": "67a1f5ef3f34a77b6dde9150",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "PlayStation 5",
-    "description": "The PlayStation 5 takes gaming to the next level with ultra-HD graphics, a powerful 825GB SSD, and ray tracing technology for realistic visuals. Whether you're into high-action games or immersive storytelling, the PS5 delivers fast loading times, seamless gameplay, and stunning visuals. It's a must-have for any serious gamer looking for the ultimate gaming experience.",
-    "price": 599.99,
-    "offerPrice": 499.99,
+    "_id": "body-butter-fairy-kisses",
+    "userId": "aroha-apothecary",
+    "name": "Fairy Kisses Body Butter",
+    "description": "Whipped body butter for deep hydration with a soft, sweet finish.",
+    "price": 24,
+    "offerPrice": 20,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/dd3l13vfoartrgbvkkh5.webp"
+      assets.aroha_product_balm,
+      assets.aroha_product_balm,
+      assets.aroha_product_balm
     ],
-    "category": "Accessories",
+    "category": "Body",
     "date": 1738667503075,
     "__v": 0
   },
   {
-    "_id": "67a1f70c3f34a77b6dde9156",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Canon EOS R5",
-    "description": "The Canon EOS R5 is a game-changing mirrorless camera with a 45MP full-frame sensor, offering ultra-high resolution and the ability to shoot 8K video. Whether you're capturing professional-quality stills or cinematic video footage, this camera delivers exceptional clarity, speed, and color accuracy. With advanced autofocus and in-body stabilization, the R5 is ideal for photographers and videographers alike.",
-    "price": 4199.99,
-    "offerPrice": 3899.99,
+    "_id": "soap-lavender-foam",
+    "userId": "aroha-apothecary",
+    "name": "Lavender Foam Soap",
+    "description": "Creamy foam soap with lavender and tea tree essential oils.",
+    "price": 18,
+    "offerPrice": 15,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/r5h370zuujvrw461c6wy.webp"
+      assets.aroha_product_soap,
+      assets.aroha_product_soap,
+      assets.aroha_product_soap
     ],
-    "category": "Camera",
+    "category": "Soap",
     "date": 1738667788883,
     "__v": 0
   },
   {
-    "_id": "67a1f7c93f34a77b6dde915a",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "MacBook Pro 16",
-    "description": "The MacBook Pro 16, powered by Apple's M2 Pro chip, offers outstanding performance with 16GB RAM and a 512GB SSD. Whether you're editing high-resolution video, developing software, or multitasking with ease, this laptop can handle the toughest tasks. It features a stunning Retina display with True Tone technology, making it a top choice for professionals in creative industries or anyone who demands premium performance in a portable form.",
-    "price": 2799.99,
-    "offerPrice": 2499.99,
+    "_id": "tea-kawakawa-blend",
+    "userId": "aroha-apothecary",
+    "name": "Kawakawa Tea Blend",
+    "description": "A grounding herbal blend with kawakawa and stinging nettle.",
+    "price": 14,
+    "offerPrice": 12,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/rzri7kytphxalrm9rubd.webp"
+      assets.aroha_product_tea,
+      assets.aroha_product_tea,
+      assets.aroha_product_tea
     ],
-    "category": "Laptop",
+    "category": "Tea",
     "date": 1738667977644,
     "__v": 0
   },
   {
-    "_id": "67a1f8363f34a77b6dde915c",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Sony WF-1000XM5",
-    "description": "Sony WF-1000XM5 true wireless earbuds deliver immersive sound with Hi-Res Audio and advanced noise cancellation technology. Designed for comfort and quality, they provide a stable, snug fit for a secure listening experience. Whether you're working out or traveling, these earbuds will keep you connected with the world around you while enjoying rich, clear sound.",
-    "price": 349.99,
-    "offerPrice": 299.99,
+    "_id": "elixir-rose-face",
+    "userId": "aroha-apothecary",
+    "name": "Rose Face Elixir",
+    "description": "A gentle blend of rose, calendula, and jojoba to nourish and glow.",
+    "price": 32,
+    "offerPrice": 28,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/e3zjaupyumdkladmytke.webp"
+      assets.aroha_product_tincture,
+      assets.aroha_product_tincture,
+      assets.aroha_product_tincture
     ],
-    "category": "Earphone",
+    "category": "Elixir",
     "date": 1738668086331,
     "__v": 0
   },
   {
-    "_id": "67a1f85e3f34a77b6dde915e",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "Samsung Projector 4k",
-    "description": "The Samsung 4K Projector offers an immersive cinematic experience with ultra-high-definition visuals and realistic color accuracy. Equipped with a built-in speaker, it delivers rich sound quality to complement its stunning 4K resolution. Perfect for movie nights, gaming, or presentations, this projector is the ultimate choice for creating an at-home theater experience or professional setting.",
-    "price": 1699.99,
-    "offerPrice": 1499.99,
+    "_id": "oil-nail-cuticle",
+    "userId": "aroha-apothecary",
+    "name": "Nail + Cuticle Oil",
+    "description": "Botanical oil to soften cuticles, strengthen nails, and promote growth.",
+    "price": 14,
+    "offerPrice": 12,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/qqdcly8a8vkyciy9g0bw.webp"
+      assets.aroha_product_tincture,
+      assets.aroha_product_tincture,
+      assets.aroha_product_tincture
     ],
-    "category": "Accessories",
+    "category": "Oil",
     "date": 1738668126660,
     "__v": 0
   },
   {
-    "_id": "67a1fa4b3f34a77b6dde9166",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "name": "ASUS ROG Zephyrus G16",
-    "description": "The ASUS ROG Zephyrus G16 gaming laptop is powered by the Intel Core i9 processor and features an RTX 4070 GPU, delivering top-tier gaming and performance. With 16GB of RAM and a 1TB SSD, this laptop is designed for gamers who demand extreme power, speed, and storage. Equipped with a stunning 16-inch display, it's built to handle the most demanding titles and applications with ease.",
-    "price": 2199.99,
-    "offerPrice": 1999.99,
+    "_id": "tincture-custom",
+    "userId": "aroha-apothecary",
+    "name": "Custom Herbal Tincture",
+    "description": "A tailored tincture made to order for your unique needs.",
+    "price": 40,
+    "offerPrice": 35,
     "image": [
-      "https://raw.githubusercontent.com/avinashdm/gs-images/main/quickcart/wig1urqgnkeyp4t2rtso.webp"
+      assets.aroha_product_tincture,
+      assets.aroha_product_tincture,
+      assets.aroha_product_tincture
     ],
-    "category": "Laptop",
+    "category": "Tincture",
     "date": 1738668619198,
+    "__v": 0
+  },
+  {
+    "_id": "remedy-rescue",
+    "userId": "aroha-apothecary",
+    "name": "Rescue Remedy",
+    "description": "A heart-soothing blend for stressful days and emotional balance.",
+    "price": 22,
+    "offerPrice": 18,
+    "image": [
+      assets.aroha_product_tincture,
+      assets.aroha_product_tincture,
+      assets.aroha_product_tincture
+    ],
+    "category": "Remedy",
+    "date": 1738668660000,
+    "__v": 0
+  },
+  {
+    "_id": "horseshoe-art-custom",
+    "userId": "aroha-apothecary",
+    "name": "Custom Horseshoe Art",
+    "description": "Upcycled horseshoe art made to order with your story and charms.",
+    "price": 85,
+    "offerPrice": 70,
+    "image": [
+      assets.aroha_product_horseshoe,
+      assets.aroha_product_horseshoe,
+      assets.aroha_product_horseshoe
+    ],
+    "category": "Art",
+    "date": 1738668700000,
     "__v": 0
   }
 ]
 
 export const userDummyData = {
-  "_id": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-  "name": "GreatStack",
-  "email": "admin@example.com",
+  "_id": "aroha-admin",
+  "name": "Aroha Apothecary",
+  "email": "arohaapothecary@gmail.com",
   "imageUrl": "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18ycnlnUnFiUDBYT2dEZ2h1ZmRXcGlpdWV5OXoiLCJyaWQiOiJ1c2VyXzJzWkZIUzFVSUl5c0p5RFZ6Q3BRaFVoVElodyJ9",
   "cartItems": {
     // "67a1f4e43f34a77b6dde9144": 3
@@ -289,41 +356,56 @@ export const userDummyData = {
 
 export const orderDummyData = [
   {
-    "_id": "67a20934b3db72db5cc77b2b",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
+    "_id": "order-aroha-001",
+    "userId": "aroha-admin",
     "items": [
       {
         "product": {
-          "_id": "67a1f4e43f34a77b6dde9144",
-          "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-          "name": "Apple AirPods Pro",
-          "description": "Apple AirPods Pro (2nd Gen) with MagSafe Case (USB-C) provide excellent sound, active noise cancellation, and a comfortable fit. The USB-C case ensures quick charging, and they pair seamlessly with Apple devices for an effortless audio experience.",
-          "price": 499.99,
-          "offerPrice": 399.99,
+          "_id": "balm-kawakawa",
+          "userId": "aroha-apothecary",
+          "name": "Kawakawa Balm",
+          "description": "Soothing balm crafted for dry or tender skin with kawakawa and calendula.",
+          "price": 18,
+          "offerPrice": 15,
           "image": [
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667237/lrllaprpos2pnp5c9pyy.png",
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667238/jqotgy2rvm36vfjv6lxl.png",
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667238/niw7tqxvjsxt7wcehxeo.png",
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667237/h8cq4x9cfzqzwaiarvpk.png"
+            assets.aroha_product_balm
           ],
-          "category": "Earphone",
+          "category": "Balms",
           "date": 1738667236865,
           "__v": 0
         },
         "quantity": 1,
-        "_id": "67a20934b3db72db5cc77b2c"
+        "_id": "order-aroha-001-item-1"
+      },
+      {
+        "product": {
+          "_id": "elixir-rose-face",
+          "userId": "aroha-apothecary",
+          "name": "Rose Face Elixir",
+          "description": "A gentle blend of rose, calendula, and jojoba to nourish and glow.",
+          "price": 32,
+          "offerPrice": 28,
+          "image": [
+            assets.aroha_product_tincture
+          ],
+          "category": "Elixir",
+          "date": 1738668086331,
+          "__v": 0
+        },
+        "quantity": 1,
+        "_id": "order-aroha-001-item-2"
       }
     ],
-    "amount": 406.99,
+    "amount": 43,
     "address": {
-      "_id": "67a1e4233f34a77b6dde9055",
-      "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-      "fullName": "GreatStack",
-      "phoneNumber": "0123456789",
-      "pincode": 654321,
-      "area": "Main Road , 123 Street, G Block",
-      "city": "City",
-      "state": "State",
+      "_id": "address-aroha-001",
+      "userId": "aroha-admin",
+      "fullName": "Harper Te Awa",
+      "phoneNumber": "0211234567",
+      "pincode": 6011,
+      "area": "Taranaki Street",
+      "city": "Wellington",
+      "state": "Wellington",
       "__v": 0
     },
     "status": "Order Placed",
@@ -331,80 +413,56 @@ export const orderDummyData = [
     "__v": 0
   },
   {
-    "_id": "67a20949b3db72db5cc77b2e",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
+    "_id": "order-aroha-002",
+    "userId": "aroha-admin",
     "items": [
       {
         "product": {
-          "_id": "67a1f52e3f34a77b6dde914a",
-          "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-          "name": "Bose QuietComfort 45",
-          "description": "The Bose QuietComfort 45 headphones are engineered for exceptional sound quality and unparalleled noise cancellation. With a 24-hour battery life and comfortable, lightweight design, these headphones deliver premium audio for any environment. Whether on a flight, in the office, or at home, the Bose QC45 blocks out distractions, offering an immersive listening experience.",
-          "price": 429.99,
-          "offerPrice": 329.99,
+          "_id": "horseshoe-art-custom",
+          "userId": "aroha-apothecary",
+          "name": "Custom Horseshoe Art",
+          "description": "Upcycled horseshoe art made to order with your story and charms.",
+          "price": 85,
+          "offerPrice": 70,
           "image": [
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667311/m16coelz8ivkk9f0nwrz.png"
+            assets.aroha_product_horseshoe
           ],
-          "category": "Headphone",
-          "date": 1738667310300,
+          "category": "Art",
+          "date": 1738668700000,
           "__v": 0
         },
         "quantity": 1,
-        "_id": "67a20949b3db72db5cc77b2f"
-      }
-    ],
-    "amount": 335.99,
-    "address": {
-      "_id": "67a1e4233f34a77b6dde9055",
-      "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-      "fullName": "GreatStack",
-      "phoneNumber": "0123456789",
-      "pincode": 654321,
-      "area": "Main Road , 123 Street, G Block",
-      "city": "City",
-      "state": "State",
-      "__v": 0
-    },
-    "status": "Order Placed",
-    "date": 1738672448031,
-    "__v": 0
-  },
-  {
-    "_id": "67a209bab3db72db5cc77b34",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "items": [
+        "_id": "order-aroha-002-item-1"
+      },
       {
         "product": {
-          "_id": "67a1f4e43f34a77b6dde9144",
-          "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-          "name": "Apple AirPods Pro",
-          "description": "Apple AirPods Pro (2nd Gen) with MagSafe Case (USB-C) provide excellent sound, active noise cancellation, and a comfortable fit. The USB-C case ensures quick charging, and they pair seamlessly with Apple devices for an effortless audio experience.",
-          "price": 499.99,
-          "offerPrice": 399.99,
+          "_id": "scrub-rose-sugar",
+          "userId": "aroha-apothecary",
+          "name": "Rose Sugar Scrub",
+          "description": "An exfoliating sugar scrub with rose and coconut to smooth and soften.",
+          "price": 18,
+          "offerPrice": 15,
           "image": [
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667237/lrllaprpos2pnp5c9pyy.png",
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667238/jqotgy2rvm36vfjv6lxl.png",
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667238/niw7tqxvjsxt7wcehxeo.png",
-            "https://res.cloudinary.com/djbvf02yt/image/upload/v1738667237/h8cq4x9cfzqzwaiarvpk.png"
+            assets.aroha_product_scrub
           ],
-          "category": "Earphone",
-          "date": 1738667236865,
+          "category": "Scrubs",
+          "date": 1738667417511,
           "__v": 0
         },
         "quantity": 1,
-        "_id": "67a209bab3db72db5cc77b35"
+        "_id": "order-aroha-002-item-2"
       }
     ],
-    "amount": 406.99,
+    "amount": 85,
     "address": {
-      "_id": "67a1e4233f34a77b6dde9055",
-      "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-      "fullName": "GreatStack",
-      "phoneNumber": "0123456789",
-      "pincode": 654321,
-      "area": "Main Road , 123 Street, G Block",
-      "city": "City",
-      "state": "State",
+      "_id": "address-aroha-002",
+      "userId": "aroha-admin",
+      "fullName": "Mila Rangi",
+      "phoneNumber": "0275558899",
+      "pincode": 7010,
+      "area": "Stoke",
+      "city": "Nelson",
+      "state": "Tasman",
       "__v": 0
     },
     "status": "Order Placed",
@@ -415,14 +473,14 @@ export const orderDummyData = [
 
 export const addressDummyData = [
   {
-    "_id": "67a1e4233f34a77b6dde9055",
-    "userId": "user_2sZFHS1UIIysJyDVzCpQhUhTIhw",
-    "fullName": "GreatStack",
-    "phoneNumber": "0123456789",
-    "pincode": 654321,
-    "area": "Main Road , 123 Street, G Block",
-    "city": "City",
-    "state": "State",
+    "_id": "address-aroha-001",
+    "userId": "aroha-admin",
+    "fullName": "Aroha Apothecary",
+    "phoneNumber": "0212345678",
+    "pincode": 6011,
+    "area": "Cuba Street",
+    "city": "Wellington",
+    "state": "Wellington",
     "__v": 0
   }
 ]

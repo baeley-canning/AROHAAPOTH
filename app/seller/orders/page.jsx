@@ -28,7 +28,7 @@ const Orders = () => {
                 <h2 className="text-lg font-medium">Orders</h2>
                 <div className="max-w-4xl rounded-md">
                     {orders.map((order, index) => (
-                        <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-t border-gray-300">
+                        <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-t border-linen-100/80">
                             <div className="flex-1 flex gap-5 max-w-80">
                                 <Image
                                     className="max-w-16 max-h-16 object-cover"

@@ -10,9 +10,9 @@ const ProductCard = ({ product }) => {
     return (
         <div
             onClick={() => { router.push('/product/' + product._id); scrollTo(0, 0) }}
-            className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer"
+            className="flex flex-col items-start gap-0.5 max-w-[220px] w-full cursor-pointer"
         >
-            <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center">
+            <div className="cursor-pointer group relative bg-linen-50/90 border border-linen-100/70 rounded-2xl w-full h-52 flex items-center justify-center">
                 <Image
                     src={product.image[0]}
                     alt={product.name}
@@ -20,7 +20,7 @@ const ProductCard = ({ product }) => {
                     width={800}
                     height={800}
                 />
-                <button className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
+                <button className="absolute top-2 right-2 bg-linen-50/90 p-2 rounded-full shadow-md border border-linen-100/70">
                     <Image
                         className="h-3 w-3"
                         src={assets.heart_icon}
@@ -29,10 +29,10 @@ const ProductCard = ({ product }) => {
                 </button>
             </div>
 
-            <p className="md:text-base font-medium pt-2 w-full truncate">{product.name}</p>
-            <p className="w-full text-xs text-gray-500/70 max-sm:hidden truncate">{product.description}</p>
+            <p className="md:text-base font-medium pt-3 w-full truncate text-ink-900">{product.name}</p>
+            <p className="w-full text-xs text-ink-500 max-sm:hidden truncate">{product.description}</p>
             <div className="flex items-center gap-2">
-                <p className="text-xs">{4.5}</p>
+                <p className="text-xs text-ink-500">{4.5}</p>
                 <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, index) => (
                         <Image
@@ -50,9 +50,9 @@ const ProductCard = ({ product }) => {
             </div>
 
             <div className="flex items-end justify-between w-full mt-1">
-                <p className="text-base font-medium">{currency}{product.offerPrice}</p>
-                <button className=" max-sm:hidden px-4 py-1.5 text-gray-500 border border-gray-500/20 rounded-full text-xs hover:bg-slate-50 transition">
-                    Buy now
+                <p className="text-base font-medium text-ink-900">{currency}{product.offerPrice}</p>
+                <button className="max-sm:hidden px-4 py-1.5 text-ink-700 border border-ink-900/15 rounded-full text-xs hover:border-ink-900/35 hover:bg-linen-100 transition">
+                    Add to cart
                 </button>
             </div>
         </div>

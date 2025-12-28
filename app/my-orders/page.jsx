@@ -28,10 +28,10 @@ const MyOrders = () => {
             <Navbar />
             <div className="flex flex-col justify-between px-6 md:px-16 lg:px-32 py-6 min-h-screen">
                 <div className="space-y-5">
-                    <h2 className="text-lg font-medium mt-6">My Orders</h2>
-                    {loading ? <Loading /> : (<div className="max-w-5xl border-t border-gray-300 text-sm">
+                    <h2 className="text-lg font-medium mt-6 text-ink-900">My Orders</h2>
+                    {loading ? <Loading /> : (<div className="max-w-5xl border-t border-linen-100/80 text-sm">
                         {orders.map((order, index) => (
-                            <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-b border-gray-300">
+                            <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-b border-linen-100/80">
                                 <div className="flex-1 flex gap-5 max-w-80">
                                     <Image
                                         className="max-w-16 max-h-16 object-cover"

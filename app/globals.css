@@ -7,13 +7,83 @@
 }
 
 @layer base {
+    :root {
+        --ink-900: 43 36 31;
+        --ink-700: 62 53 45;
+        --ink-500: 107 92 79;
+        --sage-700: 91 107 80;
+        --sage-600: 106 123 94;
+        --sage-500: 127 145 112;
+        --sage-300: 169 183 154;
+        --clay-600: 176 127 92;
+        --clay-500: 192 145 111;
+        --clay-300: 226 199 174;
+        --linen-50: 251 247 240;
+        --linen-100: 243 237 226;
+        --mist-200: 226 234 220;
+        --blush-200: 230 201 184;
+        --background: var(--linen-50);
+        --foreground: var(--ink-900);
+    }
+
+    body {
+        font-family: var(--font-body);
+        color: rgb(var(--ink-900));
+        background:
+            radial-gradient(1000px 700px at -10% -20%, rgb(var(--mist-200) / 0.75), transparent 60%),
+            radial-gradient(900px 600px at 100% 0%, rgb(var(--blush-200) / 0.55), transparent 55%),
+            linear-gradient(180deg, rgb(var(--linen-50)), rgb(var(--linen-100)));
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        font-family: var(--font-display);
+        letter-spacing: -0.01em;
+    }
+
+    .font-display {
+        font-family: var(--font-display);
+    }
+
+    .font-body {
+        font-family: var(--font-body);
+    }
+
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
+        -webkit-appearance: none;
+        margin: 0;
     }
-  }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-full bg-sage-600 px-6 py-2.5 text-sm font-semibold text-linen-50 shadow-sm transition hover:bg-sage-700;
+    }
+
+    .btn-outline {
+        @apply inline-flex items-center justify-center rounded-full border border-ink-900/20 px-6 py-2.5 text-sm font-semibold text-ink-900 transition hover:border-ink-900/40 hover:bg-linen-100;
+    }
+
+    .btn-ghost {
+        @apply inline-flex items-center gap-2 text-ink-700 transition hover:text-ink-900;
+    }
+
+    .section-kicker {
+        @apply text-xs uppercase tracking-[0.25em] text-sage-700;
+    }
+
+    .section-title {
+        @apply font-display text-3xl md:text-4xl;
+    }
+
+    .card-surface {
+        @apply rounded-2xl border border-linen-100/70 bg-linen-50/80 shadow-[0_18px_50px_-40px_rgba(43,36,31,0.6)];
+    }
+}
 
 ::-webkit-scrollbar {
-  display: none;
+    display: none;
 }

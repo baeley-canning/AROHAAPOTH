@@ -13,7 +13,7 @@ const SideBar = () => {
     ];
 
     return (
-        <div className='md:w-64 w-16 border-r min-h-screen text-base border-gray-300 py-2 flex flex-col'>
+        <div className='md:w-64 w-16 border-r min-h-screen text-base border-linen-100/80 py-2 flex flex-col'>
             {menuItems.map((item) => {
 
                 const isActive = pathname === item.path;
@@ -23,8 +23,8 @@ const SideBar = () => {
                         <div
                             className={
                                 `flex items-center py-3 px-4 gap-3 ${isActive
-                                    ? "border-r-4 md:border-r-[6px] bg-orange-600/10 border-orange-500/90"
-                                    : "hover:bg-gray-100/90 border-white"
+                                    ? "border-r-4 md:border-r-[6px] bg-sage-600/10 border-sage-600/90"
+                                    : "hover:bg-linen-50 border-white"
                                 }`
                             }
                         >
