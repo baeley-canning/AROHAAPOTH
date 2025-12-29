@@ -43,6 +43,21 @@ const Footer = () => {
         </div>
 
         <div className="w-full md:w-1/5">
+          <h2 className="font-medium text-ink-900 mb-5">Support</h2>
+          <ul className="text-sm space-y-2">
+            <li>
+              <a className="hover:text-ink-900 transition" href="/faq">FAQs</a>
+            </li>
+            <li>
+              <a className="hover:text-ink-900 transition" href="/policies">Refunds &amp; CGA</a>
+            </li>
+            <li>
+              <a className="hover:text-ink-900 transition" href="/policies">Product care</a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="w-full md:w-1/5">
           <h2 className="font-medium text-ink-900 mb-5">Get in touch</h2>
           <div className="text-sm space-y-2">
             <p>Nelson, New Zealand</p>
