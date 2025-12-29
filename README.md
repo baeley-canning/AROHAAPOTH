@@ -1,5 +1,7 @@
 # QuickCart - A simple eCommerce website
 
+[![Deploy to cPanel](https://github.com/baeley-canning/AROHAAPOTH/actions/workflows/deploy-cpanel.yml/badge.svg)](https://github.com/baeley-canning/AROHAAPOTH/actions/workflows/deploy-cpanel.yml)
+
 QuickCart is an open-source **Next.js eCommerce frontend** project.  
 It provides a modern, fast and customizable shopping UI.  
 This repo is **frontend only** – contributors can improve the design, add new pages, animations and more.
