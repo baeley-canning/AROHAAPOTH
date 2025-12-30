@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 
 const CONFIG_LOCATIONS = [
+    1,
     2,
     3,
     4,

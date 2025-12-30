@@ -30,6 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# stripe secrets
+stripe-config.php
+public/stripe/stripe-config.php
+
 # env files (can opt-in for committing if needed)
 # .env*
 
