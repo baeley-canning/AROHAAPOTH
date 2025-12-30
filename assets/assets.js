@@ -340,6 +340,54 @@ export const productsDummyData = [
     "category": "Art",
     "date": 1738668700000,
     "__v": 0
+  },
+  {
+    "_id": "bundle-calm-night",
+    "userId": "aroha-apothecary",
+    "name": "Calm Night Ritual Set",
+    "description": "A soothing trio for evening wind-down: balm, tea blend, and body butter.",
+    "price": 60,
+    "offerPrice": 52,
+    "image": [
+      assets.aroha_product_balm,
+      assets.aroha_product_tea,
+      assets.aroha_product_balm
+    ],
+    "category": "Bundle",
+    "date": 1738668720000,
+    "__v": 0
+  },
+  {
+    "_id": "bundle-soft-skin",
+    "userId": "aroha-apothecary",
+    "name": "Soft Skin Essentials",
+    "description": "Scrub, balm, and foam soap for smooth, hydrated skin.",
+    "price": 55,
+    "offerPrice": 48,
+    "image": [
+      assets.aroha_product_scrub,
+      assets.aroha_product_soap,
+      assets.aroha_product_balm
+    ],
+    "category": "Bundle",
+    "date": 1738668750000,
+    "__v": 0
+  },
+  {
+    "_id": "bundle-aroha-gift",
+    "userId": "aroha-apothecary",
+    "name": "Aroha Gift Bundle",
+    "description": "A thoughtful set with tincture, balm, and sugar scrub.",
+    "price": 70,
+    "offerPrice": 62,
+    "image": [
+      assets.aroha_product_tincture,
+      assets.aroha_product_balm,
+      assets.aroha_product_scrub
+    ],
+    "category": "Bundle",
+    "date": 1738668790000,
+    "__v": 0
   }
 ]
 

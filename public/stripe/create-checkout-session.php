@@ -21,6 +21,9 @@ const CATALOG = [
     'tincture-custom' => ['name' => 'Custom Herbal Tincture', 'unit_amount' => 3500],
     'remedy-rescue' => ['name' => 'Rescue Remedy', 'unit_amount' => 1800],
     'horseshoe-art-custom' => ['name' => 'Custom Horseshoe Art', 'unit_amount' => 7000],
+    'bundle-calm-night' => ['name' => 'Calm Night Ritual Set', 'unit_amount' => 5200],
+    'bundle-soft-skin' => ['name' => 'Soft Skin Essentials', 'unit_amount' => 4800],
+    'bundle-aroha-gift' => ['name' => 'Aroha Gift Bundle', 'unit_amount' => 6200],
 ];
 
 const CURRENCY = 'nzd';

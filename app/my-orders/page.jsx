@@ -1,77 +1,33 @@
-'use client';
-import React, { useEffect, useState } from "react";
-import { assets, orderDummyData } from "@/assets/assets";
-import Image from "next/image";
-import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import Loading from "@/components/Loading";
 
 const MyOrders = () => {
-
-    const { currency } = useAppContext();
-
-    const [orders, setOrders] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    const fetchOrders = async () => {
-        setOrders(orderDummyData)
-        setLoading(false);
-    }
-
-    useEffect(() => {
-        fetchOrders();
-    }, []);
-
-    return (
-        <>
-            <Navbar />
-            <div className="flex flex-col justify-between px-6 md:px-16 lg:px-32 py-6 min-h-screen">
-                <div className="space-y-5">
-                    <h2 className="text-lg font-medium mt-6 text-ink-900">My Orders</h2>
-                    {loading ? <Loading /> : (<div className="max-w-5xl border-t border-linen-100/80 text-sm">
-                        {orders.map((order, index) => (
-                            <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-b border-linen-100/80">
-                                <div className="flex-1 flex gap-5 max-w-80">
-                                    <Image
-                                        className="max-w-16 max-h-16 object-cover"
-                                        src={assets.box_icon}
-                                        alt="box_icon"
-                                    />
-                                    <p className="flex flex-col gap-3">
-                                        <span className="font-medium text-base">
-                                            {order.items.map((item) => item.product.name + ` x ${item.quantity}`).join(", ")}
-                                        </span>
-                                        <span>Items : {order.items.length}</span>
-                                    </p>
-                                </div>
-                                <div>
-                                    <p>
-                                        <span className="font-medium">{order.address.fullName}</span>
-                                        <br />
-                                        <span >{order.address.area}</span>
-                                        <br />
-                                        <span>{`${order.address.city}, ${order.address.state}`}</span>
-                                        <br />
-                                        <span>{order.address.phoneNumber}</span>
-                                    </p>
-                                </div>
-                                <p className="font-medium my-auto">{currency}{order.amount}</p>
-                                <div>
-                                    <p className="flex flex-col">
-                                        <span>Method : COD</span>
-                                        <span>Date : {new Date(order.date).toLocaleDateString()}</span>
-                                        <span>Payment : Pending</span>
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>)}
-                </div>
-            </div>
-            <Footer />
-        </>
-    );
+  return (
+    <>
+      <Navbar />
+      <div className="flex flex-col justify-between px-6 md:px-16 lg:px-32 py-14 min-h-screen">
+        <div className="space-y-5 max-w-2xl">
+          <h2 className="text-2xl font-medium text-ink-900">Order updates</h2>
+          <p className="text-sm md:text-base text-ink-500">
+            We do not require accounts. Your receipt and shipping updates are emailed
+            by Stripe after checkout. If you need help, reply to your receipt or
+            contact us directly.
+          </p>
+          <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-5 text-sm text-ink-600">
+            <p className="text-ink-900 font-medium">Need an update?</p>
+            <p className="mt-2">
+              Email{" "}
+              <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:arohaapothecary@gmail.com">
+                arohaapothecary@gmail.com
+              </a>{" "}
+              with your order number.
+            </p>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
 };
 
 export default MyOrders;

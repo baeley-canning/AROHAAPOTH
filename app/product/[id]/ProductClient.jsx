@@ -13,6 +13,78 @@ const ProductClient = ({ product, featuredProducts }) => {
   const { router, addToCart, currency } = useAppContext();
   const [mainImage, setMainImage] = useState(product?.image?.[0] ?? null);
 
+  const detailsByCategory = {
+    "Balms": {
+      ingredients: "Native botanicals with gentle oils and beeswax where needed.",
+      usage: "Warm a small amount between fingertips and apply to dry areas.",
+      shelf: "Best used within 6-12 months of opening.",
+    },
+    "Lip Balm": {
+      ingredients: "Plant oils, butters, and natural flavoring oils.",
+      usage: "Apply throughout the day as needed.",
+      shelf: "Best used within 6-12 months of opening.",
+    },
+    "Scrubs": {
+      ingredients: "Sugar, botanical oils, and gentle essential oils.",
+      usage: "Massage on damp skin, rinse, and pat dry.",
+      shelf: "Use within 6 months. Keep water out of the jar.",
+    },
+    "Body": {
+      ingredients: "Whipped butters with nourishing plant oils.",
+      usage: "Apply after showering for lasting softness.",
+      shelf: "Best used within 6-12 months of opening.",
+    },
+    "Soap": {
+      ingredients: "Mild cleansers with essential oil blends.",
+      usage: "Lather with water and rinse.",
+      shelf: "Use within 12 months for best scent.",
+    },
+    "Tea": {
+      ingredients: "Dried native leaves and seasonal herbs.",
+      usage: "Steep 1 tsp in hot water for 5-7 minutes.",
+      shelf: "Use within 6 months for peak flavor.",
+    },
+    "Elixir": {
+      ingredients: "Botanical oils and hydrosols. See label for details.",
+      usage: "Apply 2-3 drops to clean skin.",
+      shelf: "Best used within 6-12 months of opening.",
+    },
+    "Oil": {
+      ingredients: "Lightweight botanical oils and extracts.",
+      usage: "Massage into nails and cuticles daily.",
+      shelf: "Best used within 6-12 months of opening.",
+    },
+    "Tincture": {
+      ingredients: "Herbal extracts crafted to order. See label.",
+      usage: "Follow the directions on your bottle.",
+      shelf: "Best used within 12 months of opening.",
+    },
+    "Remedy": {
+      ingredients: "Herbal extracts crafted to support balance.",
+      usage: "Follow the directions on your bottle.",
+      shelf: "Best used within 12 months of opening.",
+    },
+    "Art": {
+      ingredients: "Upcycled horseshoe, charms, and custom accents.",
+      usage: "Display indoors away from direct weather.",
+      shelf: "Keepsake pieces last for years with care.",
+    },
+    "Bundle": {
+      ingredients: "A curated set of small-batch blends.",
+      usage: "Enjoy as a ritual set or gift to someone you love.",
+      shelf: "See each product label for care and shelf life.",
+    },
+  };
+  const detail = detailsByCategory[product.category] || {
+    ingredients: "Small-batch botanicals crafted with care.",
+    usage: "Use as directed on the label.",
+    shelf: "Best used within 6-12 months of opening.",
+  };
+  const isCustom =
+    product._id.includes("custom") ||
+    product.category === "Art" ||
+    product.category === "Tincture";
+
   useEffect(() => {
     setMainImage(product?.image?.[0] ?? null);
   }, [product]);
@@ -96,6 +168,30 @@ const ProductClient = ({ product, featuredProducts }) => {
                 </tbody>
               </table>
             </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-sm text-ink-600">
+              <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                <p className="text-ink-900 font-medium">Ingredients</p>
+                <p className="mt-1">{detail.ingredients}</p>
+              </div>
+              <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                <p className="text-ink-900 font-medium">Usage</p>
+                <p className="mt-1">{detail.usage}</p>
+              </div>
+              <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                <p className="text-ink-900 font-medium">Shelf life</p>
+                <p className="mt-1">{detail.shelf}</p>
+              </div>
+            </div>
+
+            {isCustom ? (
+              <div className="mt-6 rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4 text-sm text-ink-600">
+                <p className="text-ink-900 font-medium">Custom lead time</p>
+                <p className="mt-1">
+                  This piece is made to order. Allow 7-14 days before dispatch.
+                </p>
+              </div>
+            ) : null}
 
             <div className="flex items-center mt-10 gap-4">
               <button

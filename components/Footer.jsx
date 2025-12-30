@@ -17,6 +17,9 @@ const Footer = () => {
             Natural healing from the heart. Small batch rongoa, gentle body rituals, and
             custom keepsakes grounded in care and kaitiakitanga.
           </p>
+          <p className="mt-4 text-xs text-ink-500 max-w-sm">
+            NZ shipping, 14-day returns on unopened items, and secure checkout via Stripe.
+          </p>
           <div className="flex items-center gap-4 mt-6">
             <a href="https://www.facebook.com/arohaapothecary" aria-label="Facebook">
               <Image src={assets.facebook_icon} alt="facebook_icon" />
@@ -45,6 +48,9 @@ const Footer = () => {
         <div className="w-full md:w-1/5">
           <h2 className="font-medium text-ink-900 mb-5">Support</h2>
           <ul className="text-sm space-y-2">
+            <li>
+              <a className="hover:text-ink-900 transition" href="/about">About</a>
+            </li>
             <li>
               <a className="hover:text-ink-900 transition" href="/faq">FAQs</a>
             </li>

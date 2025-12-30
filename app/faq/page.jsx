@@ -18,6 +18,11 @@ const faqs = [
       "Yes. We offer custom tinctures and horseshoe keepsakes. Contact us with your needs and we will confirm timing, pricing, and details before we begin.",
   },
   {
+    question: "How do you work with rongoa and kaitiakitanga?",
+    answer:
+      "We approach rongoa with respect and care. Our blends are inspired by traditional Maori plant knowledge, and we prioritize kaitiakitanga by sourcing responsibly and keeping our batches small.",
+  },
+  {
     question: "Are your products safe for sensitive skin?",
     answer:
       "Everyone is different. We recommend patch testing on a small area first and discontinuing use if irritation occurs.",

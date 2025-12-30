@@ -1,9 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { assets } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
-import Image from "next/image";
 
 const Navbar = () => {
 
@@ -33,6 +31,9 @@ const Navbar = () => {
         <Link href="/#custom" className="hover:text-ink-900 transition">
           Custom
         </Link>
+        <Link href="/about" className="hover:text-ink-900 transition">
+          About
+        </Link>
         <Link href="/#contact" className="hover:text-ink-900 transition">
           Contact
         </Link>
@@ -41,19 +42,8 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <ul className="hidden md:flex items-center gap-4 ">
-        <Image className="w-4 h-4" src={assets.search_icon} alt="search icon" />
-        <button className="flex items-center gap-2 hover:text-ink-900 transition">
-          <Image src={assets.user_icon} alt="user icon" />
-          Account
-        </button>
-      </ul>
-
-      <div className="flex items-center md:hidden gap-3">
-        <button className="flex items-center gap-2 hover:text-ink-900 transition">
-          <Image src={assets.user_icon} alt="user icon" />
-          Account
-        </button>
+      <div className="hidden md:flex items-center gap-4 text-xs uppercase tracking-[0.2em] text-sage-700">
+        Guest checkout
       </div>
     </nav>
   );

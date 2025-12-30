@@ -9,6 +9,7 @@ import { useAppContext } from "@/context/AppContext";
 const Cart = () => {
 
   const { products, router, cartItems, addToCart, updateCartQuantity, getCartCount, currency } = useAppContext();
+  const cartCount = getCartCount();
 
   return (
     <>
@@ -19,89 +20,126 @@ const Cart = () => {
             <p className="text-2xl md:text-3xl text-ink-500">
               Your <span className="font-medium text-clay-500">Cart</span>
             </p>
-            <p className="text-lg md:text-xl text-ink-500/80">{getCartCount()} Items</p>
+            <p className="text-lg md:text-xl text-ink-500/80">{cartCount} Items</p>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full table-auto">
-              <thead className="text-left">
-                <tr>
-                  <th className="text-nowrap pb-6 md:px-4 px-1 text-ink-500 font-medium">
-                    Product Details
-                  </th>
-                  <th className="pb-6 md:px-4 px-1 text-ink-500 font-medium">
-                    Price
-                  </th>
-                  <th className="pb-6 md:px-4 px-1 text-ink-500 font-medium">
-                    Quantity
-                  </th>
-                  <th className="pb-6 md:px-4 px-1 text-ink-500 font-medium">
-                    Subtotal
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(cartItems).map((itemId) => {
-                  const product = products.find(product => product._id === itemId);
-
-                  if (!product || cartItems[itemId] <= 0) return null;
-
-                  return (
-                    <tr key={itemId}>
-                      <td className="flex items-center gap-4 py-4 md:px-4 px-1">
-                        <div>
-                          <div className="rounded-xl overflow-hidden bg-linen-50/90 border border-linen-100/70 p-2">
-                            <Image
-                              src={product.image[0]}
-                              alt={product.name}
-                              className="w-16 h-auto object-cover"
-                              width={1280}
-                              height={720}
-                            />
-                          </div>
-                          <button
-                            className="md:hidden text-xs text-clay-500 mt-1"
-                            onClick={() => updateCartQuantity(product._id, 0)}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                        <div className="text-sm hidden md:block">
-                          <p className="text-ink-900">{product.name}</p>
-                          <button
-                            className="text-xs text-clay-500 mt-1"
-                            onClick={() => updateCartQuantity(product._id, 0)}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </td>
-                      <td className="py-4 md:px-4 px-1 text-ink-500">{currency}{product.offerPrice}</td>
-                      <td className="py-4 md:px-4 px-1">
-                        <div className="flex items-center md:gap-2 gap-1">
-                          <button onClick={() => updateCartQuantity(product._id, cartItems[itemId] - 1)}>
-                            <Image
-                              src={assets.decrease_arrow}
-                              alt="decrease_arrow"
-                              className="w-4 h-4"
-                            />
-                          </button>
-                          <input onChange={e => updateCartQuantity(product._id, Number(e.target.value))} type="number" value={cartItems[itemId]} className="w-8 border text-center appearance-none"></input>
-                          <button onClick={() => addToCart(product._id)}>
-                            <Image
-                              src={assets.increase_arrow}
-                              alt="increase_arrow"
-                              className="w-4 h-4"
-                            />
-                          </button>
-                        </div>
-                      </td>
-                      <td className="py-4 md:px-4 px-1 text-ink-500">{currency}{(product.offerPrice * cartItems[itemId]).toFixed(2)}</td>
+          {cartCount === 0 ? (
+            <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-8 text-center">
+              <p className="text-ink-900 text-lg font-medium">Your cart is empty.</p>
+              <p className="text-sm text-ink-500 mt-2">
+                Explore our small-batch blends and curated bundles.
+              </p>
+              <button
+                onClick={() => router.push("/all-products")}
+                className="btn-primary mt-5"
+              >
+                Shop all products
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="overflow-x-auto">
+                <table className="min-w-full table-auto">
+                  <thead className="text-left">
+                    <tr>
+                      <th className="text-nowrap pb-6 md:px-4 px-1 text-ink-500 font-medium">
+                        Product Details
+                      </th>
+                      <th className="pb-6 md:px-4 px-1 text-ink-500 font-medium">
+                        Price
+                      </th>
+                      <th className="pb-6 md:px-4 px-1 text-ink-500 font-medium">
+                        Quantity
+                      </th>
+                      <th className="pb-6 md:px-4 px-1 text-ink-500 font-medium">
+                        Subtotal
+                      </th>
                     </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                  </thead>
+                  <tbody>
+                    {Object.keys(cartItems).map((itemId) => {
+                      const product = products.find(product => product._id === itemId);
+
+                      if (!product || cartItems[itemId] <= 0) return null;
+
+                      return (
+                        <tr key={itemId}>
+                          <td className="flex items-center gap-4 py-4 md:px-4 px-1">
+                            <div>
+                              <div className="rounded-xl overflow-hidden bg-linen-50/90 border border-linen-100/70 p-2">
+                                <Image
+                                  src={product.image[0]}
+                                  alt={product.name}
+                                  className="w-16 h-auto object-cover"
+                                  width={1280}
+                                  height={720}
+                                />
+                              </div>
+                              <button
+                                className="md:hidden text-xs text-clay-500 mt-1"
+                                onClick={() => updateCartQuantity(product._id, 0)}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                            <div className="text-sm hidden md:block">
+                              <p className="text-ink-900">{product.name}</p>
+                              <button
+                                className="text-xs text-clay-500 mt-1"
+                                onClick={() => updateCartQuantity(product._id, 0)}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </td>
+                          <td className="py-4 md:px-4 px-1 text-ink-500">{currency}{product.offerPrice}</td>
+                          <td className="py-4 md:px-4 px-1">
+                            <div className="flex items-center md:gap-2 gap-1">
+                              <button onClick={() => updateCartQuantity(product._id, cartItems[itemId] - 1)}>
+                                <Image
+                                  src={assets.decrease_arrow}
+                                  alt="decrease_arrow"
+                                  className="w-4 h-4"
+                                />
+                              </button>
+                              <input onChange={e => updateCartQuantity(product._id, Number(e.target.value))} type="number" value={cartItems[itemId]} className="w-8 border text-center appearance-none"></input>
+                              <button onClick={() => addToCart(product._id)}>
+                                <Image
+                                  src={assets.increase_arrow}
+                                  alt="increase_arrow"
+                                  className="w-4 h-4"
+                                />
+                              </button>
+                            </div>
+                          </td>
+                          <td className="py-4 md:px-4 px-1 text-ink-500">{currency}{(product.offerPrice * cartItems[itemId]).toFixed(2)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 text-sm text-ink-600">
+                <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                  <p className="text-ink-900 font-medium">What happens next</p>
+                  <p className="mt-1">
+                    You will complete checkout on Stripe and receive a receipt by email.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                  <p className="text-ink-900 font-medium">Shipping timeline</p>
+                  <p className="mt-1">
+                    In-stock items ship within 2-5 business days. NZ only.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                  <p className="text-ink-900 font-medium">Custom orders</p>
+                  <p className="mt-1">
+                    Made to order. Allow 7-14 days before dispatch.
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
           <button onClick={()=> router.push('/all-products')} className="group flex items-center mt-6 gap-2 text-clay-500">
             <Image
               className="group-hover:-translate-x-1 transition"
@@ -111,7 +149,7 @@ const Cart = () => {
             Continue Shopping
           </button>
         </div>
-        <OrderSummary />
+        {cartCount > 0 ? <OrderSummary /> : null}
       </div>
     </>
   );

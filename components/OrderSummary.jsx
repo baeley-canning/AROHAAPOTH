@@ -80,6 +80,11 @@ const OrderSummary = () => {
         <p className="text-sm text-clay-500 mt-4">{error}</p>
       ) : null}
 
+      <div className="mt-4 text-xs text-ink-500 space-y-1">
+        <p>Secure checkout by Stripe.</p>
+        <p>Email receipt sent automatically.</p>
+      </div>
+
       <button
         onClick={createOrder}
         disabled={isLoading || cartCount === 0}
