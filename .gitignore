@@ -33,6 +33,7 @@ yarn-error.log*
 # stripe secrets
 stripe-config.php
 public/stripe/stripe-config.php
+public/config.php
 
 # env files (can opt-in for committing if needed)
 # .env*

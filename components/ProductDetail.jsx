@@ -9,9 +9,13 @@ import Loading from "@/components/Loading";
 import { useAppContext } from "@/context/AppContext";
 import React from "react";
 
-const ProductClient = ({ product, featuredProducts }) => {
+const ProductDetail = ({ product, featuredProducts, isLoading }) => {
   const { router, addToCart, currency } = useAppContext();
   const [mainImage, setMainImage] = useState(product?.image?.[0] ?? null);
+
+  useEffect(() => {
+    setMainImage(product?.image?.[0] ?? null);
+  }, [product]);
 
   const detailsByCategory = {
     "Balms": {
@@ -75,21 +79,47 @@ const ProductClient = ({ product, featuredProducts }) => {
       shelf: "See each product label for care and shelf life.",
     },
   };
-  const detail = detailsByCategory[product.category] || {
-    ingredients: "Small-batch botanicals crafted with care.",
-    usage: "Use as directed on the label.",
-    shelf: "Best used within 6-12 months of opening.",
-  };
-  const isCustom =
-    product._id.includes("custom") ||
-    product.category === "Art" ||
-    product.category === "Tincture";
 
-  useEffect(() => {
-    setMainImage(product?.image?.[0] ?? null);
-  }, [product]);
+  const detail = product
+    ? detailsByCategory[product.category] || {
+        ingredients: "Small-batch botanicals crafted with care.",
+        usage: "Use as directed on the label.",
+        shelf: "Best used within 6-12 months of opening.",
+      }
+    : null;
 
-  if (!product) return <Loading />;
+  const isCustom = product
+    ? product._id.includes("custom") ||
+      product.category === "Art" ||
+      product.category === "Tincture"
+    : false;
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!product) {
+    return (
+      <>
+        <Navbar />
+        <div className="px-6 md:px-16 lg:px-32 pt-16">
+          <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-10 text-center">
+            <p className="text-ink-900 text-lg font-medium">Product not found.</p>
+            <p className="text-sm text-ink-500 mt-2">
+              Try browsing the shop to find something similar.
+            </p>
+            <button
+              onClick={() => router.push("/all-products")}
+              className="btn-primary mt-5"
+            >
+              Browse products
+            </button>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -169,20 +199,22 @@ const ProductClient = ({ product, featuredProducts }) => {
               </table>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-sm text-ink-600">
-              <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
-                <p className="text-ink-900 font-medium">Ingredients</p>
-                <p className="mt-1">{detail.ingredients}</p>
+            {detail ? (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-sm text-ink-600">
+                <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                  <p className="text-ink-900 font-medium">Ingredients</p>
+                  <p className="mt-1">{detail.ingredients}</p>
+                </div>
+                <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                  <p className="text-ink-900 font-medium">Usage</p>
+                  <p className="mt-1">{detail.usage}</p>
+                </div>
+                <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                  <p className="text-ink-900 font-medium">Shelf life</p>
+                  <p className="mt-1">{detail.shelf}</p>
+                </div>
               </div>
-              <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
-                <p className="text-ink-900 font-medium">Usage</p>
-                <p className="mt-1">{detail.usage}</p>
-              </div>
-              <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
-                <p className="text-ink-900 font-medium">Shelf life</p>
-                <p className="mt-1">{detail.shelf}</p>
-              </div>
-            </div>
+            ) : null}
 
             {isCustom ? (
               <div className="mt-6 rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4 text-sm text-ink-600">
@@ -231,4 +263,4 @@ const ProductClient = ({ product, featuredProducts }) => {
   );
 };
 
-export default ProductClient;
+export default ProductDetail;

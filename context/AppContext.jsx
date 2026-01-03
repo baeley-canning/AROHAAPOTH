@@ -14,6 +14,7 @@ export const AppContextProvider = (props) => {
     const currency = process.env.NEXT_PUBLIC_CURRENCY
     const router = useRouter()
     const cartStorageKey = "aroha_cart"
+    const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "")
 
     const [products, setProducts] = useState([])
     const [userData, setUserData] = useState(false)
@@ -21,7 +22,22 @@ export const AppContextProvider = (props) => {
     const [hasHydratedCart, setHasHydratedCart] = useState(false)
 
     const fetchProductData = async () => {
-        setProducts(productsDummyData)
+        try {
+            const response = await fetch(`${basePath}/api/products.php`, {
+                cache: "no-store",
+            });
+            if (!response.ok) {
+                throw new Error("Failed to fetch products");
+            }
+            const data = await response.json();
+            if (Array.isArray(data) && data.length > 0) {
+                setProducts(data);
+                return;
+            }
+        } catch (error) {
+            console.warn("Falling back to local products.", error);
+        }
+        setProducts(productsDummyData);
     }
 
     const fetchUserData = async () => {

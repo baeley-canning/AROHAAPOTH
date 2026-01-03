@@ -1,6 +1,8 @@
 <?php
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../_shared/db.php';
+
 const CONFIG_LOCATIONS = [
     1,
     2,
@@ -39,6 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $secret = getenv('STRIPE_SECRET_KEY');
+$configPath = dirname(__DIR__) . '/config.php';
+if (!$secret && file_exists($configPath)) {
+    require $configPath;
+    if (defined('STRIPE_SECRET_KEY')) {
+        $secret = STRIPE_SECRET_KEY;
+    }
+}
 if (!$secret) {
     foreach (CONFIG_LOCATIONS as $level) {
         $path = dirname(__DIR__, $level) . '/stripe-config.php';
@@ -63,33 +72,79 @@ if (!is_array($payload) || empty($payload['items']) || !is_array($payload['items
     respond(400, 'Invalid cart payload.');
 }
 
+$pdo = db();
+$dbProducts = [];
+if ($pdo) {
+    $ids = [];
+    foreach ($payload['items'] as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $id = $item['id'] ?? null;
+        if ($id) {
+            $ids[] = $id;
+        }
+    }
+    $ids = array_values(array_unique($ids));
+    if ($ids) {
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $pdo->prepare("SELECT id, name, offer_price FROM products WHERE id IN ($placeholders) AND is_active = 1");
+        $stmt->execute($ids);
+        while ($row = $stmt->fetch()) {
+            $dbProducts[$row['id']] = $row;
+        }
+    }
+}
+
 $lineItems = [];
+$orderItems = [];
+$totalAmount = 0;
 foreach ($payload['items'] as $item) {
     if (!is_array($item)) {
         continue;
     }
     $id = $item['id'] ?? null;
     $quantity = (int)($item['quantity'] ?? 0);
-    if (!$id || $quantity < 1 || !isset(CATALOG[$id])) {
+    if (!$id || $quantity < 1) {
         continue;
     }
     if ($quantity > 20) {
         $quantity = 20;
     }
-    $product = CATALOG[$id];
+    $product = null;
+    $unitAmount = null;
+    if (isset($dbProducts[$id])) {
+        $product = $dbProducts[$id]['name'];
+        $unitAmount = (int)round(((float)$dbProducts[$id]['offer_price']) * 100);
+    } elseif (isset(CATALOG[$id])) {
+        $product = CATALOG[$id]['name'];
+        $unitAmount = CATALOG[$id]['unit_amount'];
+    }
+    if (!$product || !$unitAmount) {
+        continue;
+    }
+    $lineTotal = $unitAmount * $quantity;
     $lineItems[] = [
         'price_data' => [
             'currency' => CURRENCY,
             'product_data' => [
-                'name' => $product['name'],
+                'name' => $product,
                 'metadata' => [
                     'id' => $id,
                 ],
             ],
-            'unit_amount' => $product['unit_amount'],
+            'unit_amount' => $unitAmount,
         ],
         'quantity' => $quantity,
     ];
+    $orderItems[] = [
+        'product_id' => $id,
+        'product_name' => $product,
+        'quantity' => $quantity,
+        'unit_amount' => $unitAmount,
+        'line_total' => $lineTotal,
+    ];
+    $totalAmount += $lineTotal;
 }
 
 if (!$lineItems) {
@@ -114,6 +169,37 @@ $origin = $scheme . '://' . $host;
 $successUrl = $origin . $basePath . '/order-placed/';
 $cancelUrl = $origin . $basePath . '/cart/';
 
+$orderRef = null;
+$orderId = null;
+if ($pdo) {
+    try {
+        $orderRef = 'AO' . strtoupper(bin2hex(random_bytes(4)));
+        $pdo->beginTransaction();
+        $stmt = $pdo->prepare('INSERT INTO orders (order_ref, status, amount_total, currency) VALUES (?, ?, ?, ?)');
+        $stmt->execute([$orderRef, 'pending', $totalAmount, CURRENCY]);
+        $orderId = (int)$pdo->lastInsertId();
+
+        $itemStmt = $pdo->prepare('INSERT INTO order_items (order_id, product_id, product_name, quantity, unit_amount, line_total) VALUES (?, ?, ?, ?, ?, ?)');
+        foreach ($orderItems as $item) {
+            $itemStmt->execute([
+                $orderId,
+                $item['product_id'],
+                $item['product_name'],
+                $item['quantity'],
+                $item['unit_amount'],
+                $item['line_total'],
+            ]);
+        }
+        $pdo->commit();
+    } catch (Throwable $error) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        $orderRef = null;
+        $orderId = null;
+    }
+}
+
 $params = [
     'mode' => 'payment',
     'success_url' => $successUrl,
@@ -125,6 +211,10 @@ $params = [
     ],
     'allow_promotion_codes' => 'true',
 ];
+
+if ($orderRef) {
+    $params['client_reference_id'] = $orderRef;
+}
 
 $body = http_build_query($params);
 
@@ -140,6 +230,10 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 $response = curl_exec($ch);
 if ($response === false) {
     curl_close($ch);
+    if ($pdo && $orderId) {
+        $stmt = $pdo->prepare('UPDATE orders SET status = ? WHERE id = ?');
+        $stmt->execute(['failed', $orderId]);
+    }
     respond(500, 'Stripe request failed.');
 }
 
@@ -149,11 +243,20 @@ curl_close($ch);
 $decoded = json_decode($response, true);
 if ($status >= 400) {
     $message = $decoded['error']['message'] ?? 'Stripe error.';
+    if ($pdo && $orderId) {
+        $stmt = $pdo->prepare('UPDATE orders SET status = ? WHERE id = ?');
+        $stmt->execute(['failed', $orderId]);
+    }
     respond($status, $message);
 }
 
 if (empty($decoded['url'])) {
     respond(500, 'Stripe response missing URL.');
+}
+
+if ($pdo && $orderId && !empty($decoded['id'])) {
+    $stmt = $pdo->prepare('UPDATE orders SET stripe_session_id = ? WHERE id = ?');
+    $stmt->execute([$decoded['id'], $orderId]);
 }
 
 echo json_encode(['url' => $decoded['url']]);

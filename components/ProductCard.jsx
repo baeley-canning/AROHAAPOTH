@@ -5,11 +5,12 @@ import { useAppContext } from '@/context/AppContext';
 
 const ProductCard = ({ product }) => {
 
-    const { currency, router } = useAppContext()
+    const { currency, router, addToCart } = useAppContext()
+    const productLink = `/product?id=${product._id}`;
 
     return (
         <div
-            onClick={() => { router.push('/product/' + product._id); scrollTo(0, 0) }}
+            onClick={() => { router.push(productLink); scrollTo(0, 0) }}
             className="flex flex-col items-start gap-0.5 max-w-[220px] w-full cursor-pointer"
         >
             <div className="cursor-pointer group relative bg-linen-50/90 border border-linen-100/70 rounded-2xl w-full h-52 flex items-center justify-center">
@@ -51,7 +52,13 @@ const ProductCard = ({ product }) => {
 
             <div className="flex items-end justify-between w-full mt-1">
                 <p className="text-base font-medium text-ink-900">{currency}{product.offerPrice}</p>
-                <button className="max-sm:hidden px-4 py-1.5 text-ink-700 border border-ink-900/15 rounded-full text-xs hover:border-ink-900/35 hover:bg-linen-100 transition">
+                <button
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        addToCart(product._id);
+                    }}
+                    className="max-sm:hidden px-4 py-1.5 text-ink-700 border border-ink-900/15 rounded-full text-xs hover:border-ink-900/35 hover:bg-linen-100 transition"
+                >
                     Add to cart
                 </button>
             </div>

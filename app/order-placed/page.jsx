@@ -2,8 +2,16 @@
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import Link from "next/link";
+import { useAppContext } from "@/context/AppContext";
+import { useEffect } from "react";
 
 const OrderPlaced = () => {
+  const { setCartItems } = useAppContext();
+
+  useEffect(() => {
+    setCartItems({});
+  }, [setCartItems]);
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="card-surface max-w-lg w-full text-center px-8 py-10">

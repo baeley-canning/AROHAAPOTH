@@ -1,0 +1,116 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f6f5f1;
+  color: #2b241f;
+  margin: 0;
+}
+
+.admin-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.admin-card {
+  background: #fff;
+  border: 1px solid #e8e2d6;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.admin-nav {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.admin-nav a {
+  text-decoration: none;
+  color: #3e322a;
+  font-size: 14px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-button {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #d7c9b8;
+  text-decoration: none;
+  color: #2b241f;
+  background: #fdfbf7;
+  font-size: 13px;
+}
+
+.admin-button.primary {
+  background: #6a7b5e;
+  color: #fff;
+  border-color: #6a7b5e;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #ece4d8;
+  text-align: left;
+  vertical-align: top;
+}
+
+.admin-table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a6a5b;
+}
+
+.admin-form label {
+  display: block;
+  margin-top: 14px;
+  font-size: 13px;
+  color: #4b3f36;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #e1d7c9;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.admin-form textarea {
+  min-height: 120px;
+}
+
+.admin-muted {
+  color: #7a6a5b;
+  font-size: 12px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.admin-pill {
+  background: #f6f1e8;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e6dccf;
+}
