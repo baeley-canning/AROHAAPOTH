@@ -18,6 +18,20 @@ const body = Source_Sans_3({
 export const metadata = {
   title: "Aroha Apothecary",
   description: "Botanical remedies, body rituals, and custom keepsakes made with care.",
+  metadataBase: new URL("https://arohaapothecary.com"),
+  openGraph: {
+    title: "Aroha Apothecary",
+    description: "Botanical remedies, body rituals, and custom keepsakes made with care.",
+    url: "https://arohaapothecary.com",
+    siteName: "Aroha Apothecary",
+    locale: "en_NZ",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aroha Apothecary",
+    description: "Botanical remedies, body rituals, and custom keepsakes made with care.",
+  },
 };
 
 export default function RootLayout({ children }) {
