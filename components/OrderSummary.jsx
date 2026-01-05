@@ -3,12 +3,14 @@ import React, { useState } from "react";
 
 const OrderSummary = () => {
 
-  const { currency, getCartCount, getCartAmount, cartItems } = useAppContext();
+  const { currency, getCartCount, getCartAmount, getCartSubtotal, getCartSavings, cartItems } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const cartCount = getCartCount();
   const cartAmount = getCartAmount();
+  const cartSubtotal = getCartSubtotal();
+  const cartSavings = getCartSavings();
   const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
 
   const buildLineItems = () => {
@@ -64,8 +66,14 @@ const OrderSummary = () => {
       <div className="space-y-4">
         <div className="flex justify-between text-base font-medium">
           <p className="uppercase text-ink-500">Items {cartCount}</p>
-          <p className="text-ink-900">{currency}{cartAmount}</p>
+          <p className="text-ink-900">{currency}{cartSubtotal}</p>
         </div>
+        {cartSavings > 0 ? (
+          <div className="flex justify-between text-sm text-ink-600">
+            <p>Seasonal savings</p>
+            <p>-{currency}{cartSavings}</p>
+          </div>
+        ) : null}
         <div className="flex justify-between">
           <p className="text-ink-500">Shipping (NZ)</p>
           <p className="font-medium text-ink-900">Free</p>

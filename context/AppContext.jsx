@@ -59,14 +59,22 @@ export const AppContextProvider = (props) => {
 
     const updateCartQuantity = async (itemId, quantity) => {
 
+        const parsedQuantity = Number(quantity);
+        if (!Number.isFinite(parsedQuantity)) return;
+        const nextQuantity = Math.max(0, Math.floor(parsedQuantity));
+
         let cartData = structuredClone(cartItems);
-        if (quantity === 0) {
+        if (nextQuantity === 0) {
             delete cartData[itemId];
         } else {
-            cartData[itemId] = quantity;
+            cartData[itemId] = nextQuantity;
         }
         setCartItems(cartData)
 
+    }
+
+    const clearCart = () => {
+        setCartItems({});
     }
 
     const getCartCount = () => {
@@ -89,6 +97,30 @@ export const AppContextProvider = (props) => {
             }
         }
         return Math.floor(totalAmount * 100) / 100;
+    }
+
+    const getCartSubtotal = () => {
+        let subtotal = 0;
+        for (const items in cartItems) {
+            let itemInfo = products.find((product) => product._id === items);
+            if (!itemInfo) continue;
+            if (cartItems[items] > 0) {
+                subtotal += itemInfo.price * cartItems[items];
+            }
+        }
+        return Math.floor(subtotal * 100) / 100;
+    }
+
+    const getCartSavings = () => {
+        let savings = 0;
+        for (const items in cartItems) {
+            let itemInfo = products.find((product) => product._id === items);
+            if (!itemInfo) continue;
+            if (cartItems[items] > 0 && itemInfo.price > itemInfo.offerPrice) {
+                savings += (itemInfo.price - itemInfo.offerPrice) * cartItems[items];
+            }
+        }
+        return Math.floor(savings * 100) / 100;
     }
 
     const hydrateCart = () => {
@@ -163,8 +195,8 @@ export const AppContextProvider = (props) => {
         userData, fetchUserData,
         products, fetchProductData,
         cartItems, setCartItems,
-        addToCart, updateCartQuantity,
-        getCartCount, getCartAmount
+        addToCart, updateCartQuantity, clearCart,
+        getCartCount, getCartAmount, getCartSubtotal, getCartSavings
     }
 
     return (

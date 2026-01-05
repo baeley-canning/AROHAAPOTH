@@ -60,6 +60,9 @@ const Footer = () => {
             <li>
               <a className="hover:text-ink-900 transition" href="/policies">Product care</a>
             </li>
+            <li>
+              <a className="hover:text-ink-900 transition" href="/admin/">Owner portal</a>
+            </li>
           </ul>
         </div>
 

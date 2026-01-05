@@ -8,20 +8,20 @@
 
 @layer base {
     :root {
-        --ink-900: 43 36 31;
-        --ink-700: 62 53 45;
-        --ink-500: 107 92 79;
-        --sage-700: 91 107 80;
-        --sage-600: 106 123 94;
-        --sage-500: 127 145 112;
-        --sage-300: 169 183 154;
-        --clay-600: 176 127 92;
-        --clay-500: 192 145 111;
-        --clay-300: 226 199 174;
-        --linen-50: 251 247 240;
-        --linen-100: 243 237 226;
-        --mist-200: 226 234 220;
-        --blush-200: 230 201 184;
+        --ink-900: 34 30 27;
+        --ink-700: 56 50 43;
+        --ink-500: 102 92 80;
+        --sage-700: 40 70 54;
+        --sage-600: 59 87 68;
+        --sage-500: 86 114 91;
+        --sage-300: 150 171 153;
+        --clay-600: 158 112 79;
+        --clay-500: 180 132 98;
+        --clay-300: 220 196 167;
+        --linen-50: 250 246 238;
+        --linen-100: 238 231 219;
+        --mist-200: 212 224 213;
+        --blush-200: 221 196 172;
         --background: var(--linen-50);
         --foreground: var(--ink-900);
     }
@@ -30,8 +30,8 @@
         font-family: var(--font-body);
         color: rgb(var(--ink-900));
         background:
-            radial-gradient(1000px 700px at -10% -20%, rgb(var(--mist-200) / 0.75), transparent 60%),
-            radial-gradient(900px 600px at 100% 0%, rgb(var(--blush-200) / 0.55), transparent 55%),
+            radial-gradient(1000px 700px at -10% -20%, rgb(var(--mist-200) / 0.7), transparent 60%),
+            radial-gradient(900px 600px at 100% 0%, rgb(var(--sage-300) / 0.45), transparent 55%),
             linear-gradient(180deg, rgb(var(--linen-50)), rgb(var(--linen-100)));
     }
 

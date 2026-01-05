@@ -33,11 +33,24 @@ jobs:
         env:
           GITHUB_PAGES: "false"
 
+      - name: Normalize FTP directory
+        id: ftpdir
+        run: |
+          dir="${{ secrets.FTP_SERVER_DIR }}"
+          if [ -z "$dir" ]; then
+            echo "dir=/" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          case "$dir" in
+            */) echo "dir=$dir" >> "$GITHUB_OUTPUT" ;;
+            *) echo "dir=$dir/" >> "$GITHUB_OUTPUT" ;;
+          esac
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          server-dir: ${{ steps.ftpdir.outputs.dir }}
           local-dir: ./out/

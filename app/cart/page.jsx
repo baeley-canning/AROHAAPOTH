@@ -8,7 +8,7 @@ import { useAppContext } from "@/context/AppContext";
 
 const Cart = () => {
 
-  const { products, router, cartItems, addToCart, updateCartQuantity, getCartCount, currency } = useAppContext();
+  const { products, router, cartItems, addToCart, updateCartQuantity, clearCart, getCartCount, currency } = useAppContext();
   const cartCount = getCartCount();
 
   return (
@@ -16,11 +16,21 @@ const Cart = () => {
       <Navbar />
       <div className="flex flex-col md:flex-row gap-10 px-6 md:px-16 lg:px-32 pt-14 mb-20">
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-8 border-b border-ink-500/20 pb-6">
-            <p className="text-2xl md:text-3xl text-ink-500">
-              Your <span className="font-medium text-clay-500">Cart</span>
-            </p>
-            <p className="text-lg md:text-xl text-ink-500/80">{cartCount} Items</p>
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-8 border-b border-ink-500/20 pb-6">
+            <div>
+              <p className="text-2xl md:text-3xl text-ink-500">
+                Your <span className="font-medium text-clay-500">Cart</span>
+              </p>
+              <p className="text-sm text-ink-500/80 mt-1">{cartCount} Items</p>
+            </div>
+            {cartCount > 0 ? (
+              <button
+                className="text-xs uppercase tracking-[0.2em] text-clay-500 hover:text-ink-900 transition"
+                onClick={clearCart}
+              >
+                Clear cart
+              </button>
+            ) : null}
           </div>
           {cartCount === 0 ? (
             <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-8 text-center">
@@ -83,6 +93,11 @@ const Cart = () => {
                             </div>
                             <div className="text-sm hidden md:block">
                               <p className="text-ink-900">{product.name}</p>
+                              {product.price > product.offerPrice ? (
+                                <p className="text-xs text-sage-700 mt-1">
+                                  You save {currency}{(product.price - product.offerPrice).toFixed(2)}
+                                </p>
+                              ) : null}
                               <button
                                 className="text-xs text-clay-500 mt-1"
                                 onClick={() => updateCartQuantity(product._id, 0)}
@@ -91,7 +106,14 @@ const Cart = () => {
                               </button>
                             </div>
                           </td>
-                          <td className="py-4 md:px-4 px-1 text-ink-500">{currency}{product.offerPrice}</td>
+                          <td className="py-4 md:px-4 px-1">
+                            <div className="flex flex-col">
+                              <span className="text-ink-900">{currency}{product.offerPrice}</span>
+                              {product.price > product.offerPrice ? (
+                                <span className="text-xs text-ink-500 line-through">{currency}{product.price}</span>
+                              ) : null}
+                            </div>
+                          </td>
                           <td className="py-4 md:px-4 px-1">
                             <div className="flex items-center md:gap-2 gap-1">
                               <button onClick={() => updateCartQuantity(product._id, cartItems[itemId] - 1)}>
@@ -101,7 +123,14 @@ const Cart = () => {
                                   className="w-4 h-4"
                                 />
                               </button>
-                              <input onChange={e => updateCartQuantity(product._id, Number(e.target.value))} type="number" value={cartItems[itemId]} className="w-8 border text-center appearance-none"></input>
+                              <input
+                                onChange={e => updateCartQuantity(product._id, e.target.value)}
+                                type="number"
+                                min="0"
+                                value={cartItems[itemId]}
+                                aria-label={`${product.name} quantity`}
+                                className="w-10 border border-ink-500/20 rounded-md text-center appearance-none bg-white/70 text-ink-900"
+                              />
                               <button onClick={() => addToCart(product._id)}>
                                 <Image
                                   src={assets.increase_arrow}
