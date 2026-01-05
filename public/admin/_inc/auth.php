@@ -15,7 +15,9 @@ function require_login()
 function login_admin($admin)
 {
     $_SESSION['admin_id'] = $admin['id'];
-    $_SESSION['admin_email'] = $admin['email'];
+    if (isset($admin['username'])) {
+        $_SESSION['admin_username'] = $admin['username'];
+    }
 }
 
 function logout_admin()

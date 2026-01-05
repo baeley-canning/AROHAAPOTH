@@ -14,6 +14,12 @@ define('DB_PASS', 'cpanel_db_password');
 // Optional: set a setup key to protect admin/install.php
 define('APP_SETUP_KEY', 'replace-with-a-random-string');
 
+// Optional: fallback admin login without a database.
+// Prefer ADMIN_PASSWORD_HASH (generated via password_hash) over plain text.
+define('ADMIN_USERNAME', 'owner');
+define('ADMIN_PASSWORD_HASH', '');
+define('ADMIN_PASSWORD', '');
+
 // Stripe keys (optional here if you still use public/stripe/stripe-config.php)
 define('STRIPE_SECRET_KEY', 'sk_test_replace_me');
 define('STRIPE_WEBHOOK_SECRET', 'whsec_replace_me');

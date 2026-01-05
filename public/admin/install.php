@@ -25,16 +25,16 @@ $message = '';
 $hasDb = (bool)$pdo;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
-    $email = trim($_POST['email'] ?? '');
+    $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
     $seed = isset($_POST['seed']);
 
-    if ($email === '' || $password === '') {
-        $message = 'Email and password are required.';
+    if ($username === '' || $password === '') {
+        $message = 'Username and password are required.';
     } else {
         $pdo->exec('CREATE TABLE IF NOT EXISTS admins (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            email VARCHAR(255) UNIQUE NOT NULL,
+            username VARCHAR(64) UNIQUE NOT NULL,
             password_hash VARCHAR(255) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )');
@@ -76,8 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
             FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
         )');
 
-        $stmt = $pdo->prepare('INSERT IGNORE INTO admins (email, password_hash) VALUES (?, ?)');
-        $stmt->execute([$email, password_hash($password, PASSWORD_DEFAULT)]);
+        $stmt = $pdo->prepare('INSERT IGNORE INTO admins (username, password_hash) VALUES (?, ?)');
+        $stmt->execute([$username, password_hash($password, PASSWORD_DEFAULT)]);
 
         if ($seed) {
             $products = [
@@ -127,8 +127,8 @@ render_header('Install');
         <p class="admin-muted"><?php echo htmlspecialchars($message); ?></p>
     <?php endif; ?>
     <form method="post" class="admin-form">
-        <label>Admin Email</label>
-        <input type="email" name="email" required>
+        <label>Admin Username</label>
+        <input type="text" name="username" required>
 
         <label>Admin Password</label>
         <input type="password" name="password" required>
