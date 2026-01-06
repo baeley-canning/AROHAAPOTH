@@ -207,7 +207,7 @@ $params = [
     'line_items' => $lineItems,
     'billing_address_collection' => 'required',
     'shipping_address_collection' => [
-        'countries' => ['NZ'],
+        'allowed_countries' => ['NZ'],
     ],
     'allow_promotion_codes' => 'true',
 ];
