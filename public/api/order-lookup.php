@@ -136,7 +136,7 @@ if (!$pdo) {
     respond(500, 'Database not configured.');
 }
 
-$stmt = $pdo->prepare('SELECT * FROM orders WHERE order_ref = ? AND LOWER(email) = ? LIMIT 1');
+$stmt = $pdo->prepare('SELECT * FROM orders WHERE order_ref = ? AND (LOWER(email) = ? OR email IS NULL OR email = "") LIMIT 1');
 $stmt->execute([$orderRef, $email]);
 $order = $stmt->fetch();
 if (!$order) {
