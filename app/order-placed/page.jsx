@@ -4,9 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useAppContext } from "@/context/AppContext";
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 const OrderPlaced = () => {
   const { setCartItems } = useAppContext();
+  const searchParams = useSearchParams();
+  const orderRef = searchParams.get("ref");
 
   useEffect(() => {
     setCartItems({});
@@ -27,6 +30,18 @@ const OrderPlaced = () => {
           </a>
           .
         </p>
+        {orderRef ? (
+          <div className="mt-6 rounded-2xl border border-linen-100/70 bg-linen-50/80 px-4 py-3 text-sm text-ink-700">
+            <p className="text-xs uppercase tracking-[0.2em] text-ink-500">Order reference</p>
+            <p className="mt-2 font-semibold text-ink-900">{orderRef}</p>
+            <p className="text-xs text-ink-500 mt-2">
+              Use this reference with your checkout email on the order lookup page.
+            </p>
+            <Link href={`/my-orders?ref=${encodeURIComponent(orderRef)}`} className="btn-outline mt-3 inline-flex">
+              Track this order
+            </Link>
+          </div>
+        ) : null}
         <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
           <Link href="/all-products" className="btn-primary">
             Continue shopping

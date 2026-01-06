@@ -166,7 +166,7 @@ $basePath = preg_replace('#/stripe$#', '', $scriptDir);
 $basePath = rtrim($basePath, '/');
 $origin = $scheme . '://' . $host;
 
-$successUrl = $origin . $basePath . '/order-placed/';
+$successUrlBase = $origin . $basePath . '/order-placed/';
 $cancelUrl = $origin . $basePath . '/cart/';
 
 $orderRef = null;
@@ -198,6 +198,11 @@ if ($pdo) {
         $orderRef = null;
         $orderId = null;
     }
+}
+
+$successUrl = $successUrlBase;
+if ($orderRef) {
+    $successUrl = $successUrlBase . '?ref=' . urlencode($orderRef);
 }
 
 $params = [
