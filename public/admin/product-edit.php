@@ -16,6 +16,7 @@ $product = [
     'images' => '',
     'is_active' => 1,
 ];
+$categories = [];
 
 if ($pdo && $id !== '') {
     $stmt = $pdo->prepare('SELECT * FROM products WHERE id = ? LIMIT 1');
@@ -28,6 +29,11 @@ if ($pdo && $id !== '') {
             $product['images'] = implode(', ', $images);
         }
     }
+}
+
+if ($pdo) {
+    $stmt = $pdo->query("SELECT DISTINCT category FROM products WHERE category IS NOT NULL AND category != '' ORDER BY category ASC");
+    $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
 $message = '';
@@ -96,7 +102,13 @@ render_header($id ? 'Edit Product' : 'Add Product');
         <input type="number" name="offer_price" step="0.01" value="<?php echo htmlspecialchars($product['offer_price'] ?? ''); ?>" required>
 
         <label>Category</label>
-        <input type="text" name="category" value="<?php echo htmlspecialchars($product['category'] ?? ''); ?>">
+        <input type="text" name="category" list="category-options" value="<?php echo htmlspecialchars($product['category'] ?? ''); ?>">
+        <datalist id="category-options">
+            <?php foreach ($categories as $categoryOption): ?>
+                <option value="<?php echo htmlspecialchars($categoryOption); ?>"></option>
+            <?php endforeach; ?>
+        </datalist>
+        <span class="admin-muted">Pick an existing category or type a new one.</span>
 
         <label>Images (comma separated URLs)</label>
         <textarea name="images" placeholder="/images/aroha_product_balm.svg, /images/aroha_product_balm.svg"><?php echo htmlspecialchars($product['images'] ?? ''); ?></textarea>
