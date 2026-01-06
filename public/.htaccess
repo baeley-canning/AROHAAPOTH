@@ -1,7 +1,9 @@
+DirectoryIndex index.html
+
 RewriteEngine On
 
 # Friendly legacy links -> query product page
-RewriteRule ^product/([^/]+)/?$ /product?id=$1 [L,R=302]
+RewriteRule ^product/(?!index\.(html|txt)$)([^/]+)/?$ /product?id=$1 [L,R=302]
 
 <Files "config.php">
   Require all denied
