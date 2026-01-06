@@ -1,6 +1,7 @@
 "use client";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import Script from "next/script";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -23,11 +24,13 @@ const OrderLookupClient = () => {
   const searchParams = useSearchParams();
   const [orderRef, setOrderRef] = useState("");
   const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
   useEffect(() => {
     const ref = (searchParams.get("ref") || "").trim();
@@ -48,12 +51,17 @@ const OrderLookupClient = () => {
     setIsLoading(true);
 
     try {
+      const token = typeof document !== "undefined"
+        ? document.querySelector('textarea[name="cf-turnstile-response"]')?.value || ""
+        : "";
       const response = await fetch(`${basePath}/api/order-lookup.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderRef: orderRef.trim(),
           email: email.trim(),
+          company,
+          turnstileToken: token,
         }),
       });
       const data = await response.json();
@@ -104,6 +112,23 @@ const OrderLookupClient = () => {
                 required
               />
             </div>
+            <div className="hidden" aria-hidden="true">
+              <label>Company</label>
+              <input
+                type="text"
+                name="company"
+                value={company}
+                onChange={(event) => setCompany(event.target.value)}
+                autoComplete="off"
+                tabIndex={-1}
+              />
+            </div>
+            {turnstileSiteKey ? (
+              <>
+                <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+                <div className="cf-turnstile" data-sitekey={turnstileSiteKey}></div>
+              </>
+            ) : null}
             <button type="submit" className="btn-primary" disabled={isLoading}>
               {isLoading ? "Checking..." : "Check order"}
             </button>

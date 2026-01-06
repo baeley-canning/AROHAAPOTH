@@ -1,0 +1,5 @@
+Options -Indexes
+
+<Files "install.php">
+  Require all denied
+</Files>

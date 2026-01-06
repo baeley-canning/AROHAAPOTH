@@ -23,3 +23,7 @@ define('ADMIN_PASSWORD', '');
 // Stripe keys (optional here if you still use public/stripe/stripe-config.php)
 define('STRIPE_SECRET_KEY', 'sk_test_replace_me');
 define('STRIPE_WEBHOOK_SECRET', 'whsec_replace_me');
+
+// Optional: Cloudflare Turnstile for order lookup
+define('TURNSTILE_SITE_KEY', '');
+define('TURNSTILE_SECRET_KEY', '');

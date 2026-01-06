@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: "Cormorant Garamond";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("/fonts/cormorant-garamond-variable.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Source Sans 3";
+    font-style: normal;
+    font-weight: 300 600;
+    font-display: swap;
+    src: url("/fonts/source-sans-3-variable.woff2") format("woff2");
+}
+
 * {
     scroll-behavior: smooth;
 }
@@ -24,6 +40,8 @@
         --blush-200: 221 196 172;
         --background: var(--linen-50);
         --foreground: var(--ink-900);
+        --font-display: "Cormorant Garamond", serif;
+        --font-body: "Source Sans 3", sans-serif;
     }
 
     body {
