@@ -7,7 +7,7 @@ const ProductRedirectClient = ({ id }) => {
 
   useEffect(() => {
     if (!id) return;
-    router.replace(`/product?id=${id}`);
+    router.replace(`/product?id=${encodeURIComponent(id)}`);
   }, [id, router]);
 
   return null;

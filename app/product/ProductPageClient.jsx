@@ -6,13 +6,57 @@ import ProductDetail from "@/components/ProductDetail";
 
 const ProductPageClient = () => {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id");
+  const rawId = searchParams.get("id") || "";
   const router = useRouter();
   const { products } = useAppContext();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [resolvedId, setResolvedId] = useState("");
+  const [hasResolvedId, setHasResolvedId] = useState(false);
 
   const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
+
+  const isInvalidId = (value) => {
+    const normalized = String(value || "").trim().toLowerCase();
+    if (!normalized) return true;
+    return ["product", "index.html", "index.txt"].includes(normalized);
+  };
+
+  const resolveIdFromPath = () => {
+    if (typeof window === "undefined") return "";
+    const path = window.location.pathname.replace(/\/$/, "");
+    const segments = path.split("/").filter(Boolean);
+    const productIndex = segments.lastIndexOf("product");
+    if (productIndex === -1) return "";
+    const candidate = segments[productIndex + 1] || "";
+    if (isInvalidId(candidate)) return "";
+    return candidate;
+  };
+
+  useEffect(() => {
+    let nextId = rawId;
+    if (isInvalidId(nextId)) {
+      nextId = "";
+    }
+
+    if (!nextId && typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const paramId = params.get("id") || "";
+      if (!isInvalidId(paramId)) {
+        nextId = paramId;
+      }
+    }
+
+    if (!nextId) {
+      const pathId = resolveIdFromPath();
+      if (pathId) {
+        nextId = pathId;
+      }
+    }
+
+    setResolvedId(nextId);
+    setHasResolvedId(true);
+  }, [rawId]);
 
   const updateMeta = (selector, content) => {
     if (!content || typeof document === "undefined") return;
@@ -29,13 +73,14 @@ const ProductPageClient = () => {
   };
 
   useEffect(() => {
-    if (!id) {
-      setIsLoading(false);
+    if (!hasResolvedId) return;
+    if (!resolvedId) {
       router.replace("/all-products");
       return;
     }
 
-    const existing = (products || []).find((item) => item._id === id);
+    setIsLoading(true);
+    const existing = (products || []).find((item) => item._id === resolvedId);
     if (existing) {
       setProduct(existing);
       setIsLoading(false);
@@ -44,7 +89,7 @@ const ProductPageClient = () => {
 
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`${basePath}/api/product.php?id=${encodeURIComponent(id)}`, {
+        const response = await fetch(`${basePath}/api/product.php?id=${encodeURIComponent(resolvedId)}`, {
           cache: "no-store",
         });
         if (!response.ok) {
@@ -60,7 +105,7 @@ const ProductPageClient = () => {
     };
 
     fetchProduct();
-  }, [id, basePath, products, router]);
+  }, [resolvedId, hasResolvedId, basePath, products, router]);
 
   useEffect(() => {
     if (!product) return;

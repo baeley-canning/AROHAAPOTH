@@ -9,7 +9,7 @@ const ProductCard = ({ product }) => {
     const { currency, addToCart } = useAppContext()
     const productId = product._id || product.id || "";
     const productLink = productId
-        ? `/product/${encodeURIComponent(productId)}`
+        ? `/product?id=${encodeURIComponent(productId)}`
         : "/all-products";
     const imageAlt = product.imageAlt || product.name;
 
