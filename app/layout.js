@@ -19,6 +19,13 @@ export const metadata = {
   title: "Aroha Apothecary",
   description: "Botanical remedies, body rituals, and custom keepsakes made with care.",
   metadataBase: new URL("https://arohaapothecary.com"),
+  alternates: {
+    canonical: "https://arohaapothecary.com",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Aroha Apothecary",
     description: "Botanical remedies, body rituals, and custom keepsakes made with care.",

@@ -7,6 +7,7 @@ const ProductCard = ({ product }) => {
 
     const { currency, router, addToCart } = useAppContext()
     const productLink = `/product?id=${product._id}`;
+    const imageAlt = product.imageAlt || product.name;
 
     return (
         <div
@@ -16,7 +17,7 @@ const ProductCard = ({ product }) => {
             <div className="cursor-pointer group relative bg-linen-50/90 border border-linen-100/70 rounded-2xl w-full h-52 flex items-center justify-center">
                 <Image
                     src={product.image[0]}
-                    alt={product.name}
+                    alt={imageAlt}
                     className="group-hover:scale-105 transition object-cover w-4/5 h-4/5 md:w-full md:h-full"
                     width={800}
                     height={800}

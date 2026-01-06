@@ -12,6 +12,7 @@ import React from "react";
 const ProductDetail = ({ product, featuredProducts, isLoading }) => {
   const { router, addToCart, currency } = useAppContext();
   const [mainImage, setMainImage] = useState(product?.image?.[0] ?? null);
+  const imageAlt = product?.imageAlt || product?.name || "Product image";
 
   useEffect(() => {
     setMainImage(product?.image?.[0] ?? null);
@@ -130,7 +131,7 @@ const ProductDetail = ({ product, featuredProducts, isLoading }) => {
             <div className="rounded-2xl overflow-hidden bg-linen-50/90 border border-linen-100/70 mb-4">
               <Image
                 src={mainImage || product.image[0]}
-                alt={product.name}
+                alt={imageAlt}
                 className="w-full h-auto object-cover"
                 width={1280}
                 height={720}
@@ -146,7 +147,7 @@ const ProductDetail = ({ product, featuredProducts, isLoading }) => {
                 >
                   <Image
                     src={image}
-                    alt={`${product.name} view ${index + 1}`}
+                    alt={`${imageAlt} view ${index + 1}`}
                     className="w-full h-auto object-cover"
                     width={1280}
                     height={720}

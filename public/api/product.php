@@ -17,7 +17,7 @@ if (!$pdo) {
     exit;
 }
 
-$stmt = $pdo->prepare('SELECT id, name, description, price, offer_price, category, images FROM products WHERE id = ? AND is_active = 1 LIMIT 1');
+$stmt = $pdo->prepare('SELECT id, name, description, price, offer_price, category, images, image_alt, seo_title, seo_description FROM products WHERE id = ? AND is_active = 1 LIMIT 1');
 $stmt->execute([$id]);
 $row = $stmt->fetch();
 if (!$row) {
@@ -46,4 +46,7 @@ echo json_encode([
     'offerPrice' => (float)$row['offer_price'],
     'category' => $row['category'],
     'image' => $images,
+    'imageAlt' => $row['image_alt'] ?? '',
+    'seoTitle' => $row['seo_title'] ?? '',
+    'seoDescription' => $row['seo_description'] ?? '',
 ]);

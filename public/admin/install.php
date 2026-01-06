@@ -47,6 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
             offer_price DECIMAL(10,2) NOT NULL,
             category VARCHAR(64),
             images TEXT,
+            image_alt VARCHAR(255),
+            seo_title VARCHAR(255),
+            seo_description TEXT,
             is_active TINYINT(1) DEFAULT 1,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

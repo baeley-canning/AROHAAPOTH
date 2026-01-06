@@ -13,6 +13,20 @@ const ProductPageClient = () => {
 
   const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
 
+  const updateMeta = (selector, content) => {
+    if (!content || typeof document === "undefined") return;
+    let tag = document.querySelector(selector);
+    if (!tag) {
+      tag = document.createElement("meta");
+      const match = selector.match(/\[(.+?)=['"](.+?)['"]\]/);
+      if (match) {
+        tag.setAttribute(match[1], match[2]);
+      }
+      document.head.appendChild(tag);
+    }
+    tag.setAttribute("content", content);
+  };
+
   useEffect(() => {
     if (!id) {
       setIsLoading(false);
@@ -45,6 +59,19 @@ const ProductPageClient = () => {
 
     fetchProduct();
   }, [id, basePath, products]);
+
+  useEffect(() => {
+    if (!product) return;
+    const title = product.seoTitle || `${product.name} | Aroha Apothecary`;
+    const description = product.seoDescription || product.description;
+
+    document.title = title;
+    updateMeta('meta[name="description"]', description);
+    updateMeta('meta[property="og:title"]', title);
+    updateMeta('meta[property="og:description"]', description);
+    updateMeta('meta[name="twitter:title"]', title);
+    updateMeta('meta[name="twitter:description"]', description);
+  }, [product]);
 
   return (
     <ProductDetail

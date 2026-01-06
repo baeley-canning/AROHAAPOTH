@@ -27,5 +27,33 @@ function db()
         return null;
     }
 
+    ensure_product_columns($pdo);
     return $pdo;
+}
+
+function ensure_product_columns($pdo)
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    $columns = [
+        'image_alt' => 'VARCHAR(255) DEFAULT NULL',
+        'seo_title' => 'VARCHAR(255) DEFAULT NULL',
+        'seo_description' => 'TEXT',
+    ];
+
+    foreach ($columns as $name => $definition) {
+        try {
+            $stmt = $pdo->prepare('SHOW COLUMNS FROM products LIKE ?');
+            $stmt->execute([$name]);
+            if (!$stmt->fetch()) {
+                $pdo->exec("ALTER TABLE products ADD COLUMN {$name} {$definition}");
+            }
+        } catch (Throwable $error) {
+            // Ignore if privileges or table are unavailable.
+        }
+    }
 }

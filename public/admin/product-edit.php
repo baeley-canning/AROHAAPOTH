@@ -14,6 +14,9 @@ $product = [
     'offer_price' => '',
     'category' => '',
     'images' => '',
+    'image_alt' => '',
+    'seo_title' => '',
+    'seo_description' => '',
     'is_active' => 1,
 ];
 $categories = [];
@@ -36,7 +39,7 @@ if ($pdo) {
     $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
 }
 
-$message = '';
+$messages = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
     $idValue = trim($_POST['id'] ?? '');
     $name = trim($_POST['name'] ?? '');
@@ -45,27 +48,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
     $offerPrice = (float)($_POST['offer_price'] ?? 0);
     $category = trim($_POST['category'] ?? '');
     $imagesRaw = trim($_POST['images'] ?? '');
+    $imageAlt = trim($_POST['image_alt'] ?? '');
+    $seoTitle = trim($_POST['seo_title'] ?? '');
+    $seoDescription = trim($_POST['seo_description'] ?? '');
     $isActive = isset($_POST['is_active']) ? 1 : 0;
 
+    $uploadedImages = [];
+    if (!empty($_FILES['images_upload']['name'][0])) {
+        $uploadDir = dirname(__DIR__) . '/images/uploads';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $allowedExt = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
+        $allowedMime = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+        $finfo = function_exists('finfo_open') ? finfo_open(FILEINFO_MIME_TYPE) : null;
+        $baseSlug = preg_replace('/[^a-z0-9]+/i', '-', strtolower($idValue ?: $id ?: 'product'));
+        $baseSlug = trim($baseSlug, '-');
+
+        foreach ($_FILES['images_upload']['name'] as $index => $originalName) {
+            $tmpName = $_FILES['images_upload']['tmp_name'][$index] ?? '';
+            $error = $_FILES['images_upload']['error'][$index] ?? UPLOAD_ERR_NO_FILE;
+            if ($error !== UPLOAD_ERR_OK || $tmpName === '') {
+                continue;
+            }
+
+            $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+            if (!in_array($extension, $allowedExt, true)) {
+                $messages[] = 'Skipped unsupported file type: ' . basename($originalName);
+                continue;
+            }
+
+            $mime = $finfo ? finfo_file($finfo, $tmpName) : '';
+            if ($mime && !in_array($mime, $allowedMime, true)) {
+                $messages[] = 'Skipped invalid image: ' . basename($originalName);
+                continue;
+            }
+
+            $suffix = bin2hex(random_bytes(4));
+            $filename = ($baseSlug ?: 'product') . '-' . date('YmdHis') . '-' . $suffix . '.' . $extension;
+            $targetPath = $uploadDir . '/' . $filename;
+
+            if (move_uploaded_file($tmpName, $targetPath)) {
+                $uploadedImages[] = '/images/uploads/' . $filename;
+            }
+        }
+
+        if ($finfo) {
+            finfo_close($finfo);
+        }
+    }
+
     $images = array_values(array_filter(array_map('trim', explode(',', $imagesRaw))));
+    $images = array_merge($uploadedImages, $images);
+    $images = array_values(array_unique(array_filter($images)));
     $imagesJson = $images ? json_encode($images) : json_encode(['/images/aroha_product_balm.svg']);
 
     if ($pdo && $idValue !== '' && $name !== '') {
         if ($id !== '') {
-            $stmt = $pdo->prepare('UPDATE products SET name = ?, description = ?, price = ?, offer_price = ?, category = ?, images = ?, is_active = ? WHERE id = ?');
-            $stmt->execute([$name, $description, $price, $offerPrice, $category, $imagesJson, $isActive, $id]);
-            $message = 'Product updated.';
+            $stmt = $pdo->prepare('UPDATE products SET name = ?, description = ?, price = ?, offer_price = ?, category = ?, images = ?, image_alt = ?, seo_title = ?, seo_description = ?, is_active = ? WHERE id = ?');
+            $stmt->execute([$name, $description, $price, $offerPrice, $category, $imagesJson, $imageAlt, $seoTitle, $seoDescription, $isActive, $id]);
+            $messages[] = 'Product updated.';
         } else {
-            $stmt = $pdo->prepare('INSERT INTO products (id, name, description, price, offer_price, category, images, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-            $stmt->execute([$idValue, $name, $description, $price, $offerPrice, $category, $imagesJson, $isActive]);
-            $message = 'Product created.';
+            $stmt = $pdo->prepare('INSERT INTO products (id, name, description, price, offer_price, category, images, image_alt, seo_title, seo_description, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt->execute([$idValue, $name, $description, $price, $offerPrice, $category, $imagesJson, $imageAlt, $seoTitle, $seoDescription, $isActive]);
+            $messages[] = 'Product created.';
             $id = $idValue;
         }
     } else {
-        $message = 'Please fill in the required fields.';
+        $messages[] = 'Please fill in the required fields.';
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && !$pdo) {
-    $message = 'Database not configured. Update config.php and run /admin/install.php.';
+    $messages[] = 'Database not configured. Update config.php and run /admin/install.php.';
 }
 
 render_header($id ? 'Edit Product' : 'Add Product');
@@ -75,8 +129,10 @@ render_header($id ? 'Edit Product' : 'Add Product');
     <a class="admin-button" href="/admin/products.php">Back to products</a>
 </div>
 
-<?php if ($message): ?>
-    <p class="admin-muted"><?php echo htmlspecialchars($message); ?></p>
+<?php if ($messages): ?>
+    <?php foreach ($messages as $message): ?>
+        <p class="admin-muted"><?php echo htmlspecialchars($message); ?></p>
+    <?php endforeach; ?>
 <?php endif; ?>
 
 <?php if (!$dbReady): ?>
@@ -84,7 +140,7 @@ render_header($id ? 'Edit Product' : 'Add Product');
 <?php endif; ?>
 
 <div class="admin-card">
-    <form method="post" class="admin-form">
+    <form method="post" class="admin-form" enctype="multipart/form-data">
         <label>Product ID (slug)</label>
         <input type="text" name="id" value="<?php echo htmlspecialchars($id ?: ($product['id'] ?? '')); ?>" <?php echo $id ? 'readonly' : 'required'; ?>>
         <span class="admin-muted">Use lowercase and hyphens, e.g. balm-kawakawa.</span>
@@ -110,9 +166,23 @@ render_header($id ? 'Edit Product' : 'Add Product');
         </datalist>
         <span class="admin-muted">Pick an existing category or type a new one.</span>
 
+        <label>Upload Images</label>
+        <input type="file" name="images_upload[]" accept="image/*" multiple>
+        <span class="admin-muted">Uploads go to /images/uploads and will be added automatically.</span>
+
         <label>Images (comma separated URLs)</label>
         <textarea name="images" placeholder="/images/aroha_product_balm.svg, /images/aroha_product_balm.svg"><?php echo htmlspecialchars($product['images'] ?? ''); ?></textarea>
         <span class="admin-muted">Upload images to /images and paste the paths here.</span>
+
+        <label>Image Alt Text (SEO)</label>
+        <input type="text" name="image_alt" value="<?php echo htmlspecialchars($product['image_alt'] ?? ''); ?>">
+        <span class="admin-muted">Used for the product image alt text. Keep it descriptive.</span>
+
+        <label>SEO Title</label>
+        <input type="text" name="seo_title" value="<?php echo htmlspecialchars($product['seo_title'] ?? ''); ?>">
+
+        <label>SEO Description</label>
+        <textarea name="seo_description"><?php echo htmlspecialchars($product['seo_description'] ?? ''); ?></textarea>
 
         <label>
             <input type="checkbox" name="is_active" value="1" <?php echo !empty($product['is_active']) ? 'checked' : ''; ?>>

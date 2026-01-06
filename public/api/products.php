@@ -10,7 +10,7 @@ if (!$pdo) {
     exit;
 }
 
-$stmt = $pdo->query('SELECT id, name, description, price, offer_price, category, images FROM products WHERE is_active = 1 ORDER BY created_at DESC');
+$stmt = $pdo->query('SELECT id, name, description, price, offer_price, category, images, image_alt, seo_title, seo_description FROM products WHERE is_active = 1 ORDER BY created_at DESC');
 $products = [];
 while ($row = $stmt->fetch()) {
     $images = [];
@@ -33,6 +33,9 @@ while ($row = $stmt->fetch()) {
         'offerPrice' => (float)$row['offer_price'],
         'category' => $row['category'],
         'image' => $images,
+        'imageAlt' => $row['image_alt'] ?? '',
+        'seoTitle' => $row['seo_title'] ?? '',
+        'seoDescription' => $row['seo_description'] ?? '',
     ];
 }
 
