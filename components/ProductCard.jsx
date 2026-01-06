@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link';
 import { assets } from '@/assets/assets'
 import Image from 'next/image';
 import { useAppContext } from '@/context/AppContext';
@@ -10,8 +11,8 @@ const ProductCard = ({ product }) => {
     const imageAlt = product.imageAlt || product.name;
 
     return (
-        <div
-            onClick={() => { router.push(productLink); scrollTo(0, 0) }}
+        <Link
+            href={productLink}
             className="flex flex-col items-start gap-0.5 max-w-[220px] w-full cursor-pointer"
         >
             <div className="cursor-pointer group relative bg-linen-50/90 border border-linen-100/70 rounded-2xl w-full h-52 flex items-center justify-center">
@@ -55,6 +56,7 @@ const ProductCard = ({ product }) => {
                 <p className="text-base font-medium text-ink-900">{currency}{product.offerPrice}</p>
                 <button
                     onClick={(event) => {
+                        event.preventDefault();
                         event.stopPropagation();
                         addToCart(product._id);
                     }}
@@ -63,7 +65,7 @@ const ProductCard = ({ product }) => {
                     Add to cart
                 </button>
             </div>
-        </div>
+        </Link>
     )
 }
 

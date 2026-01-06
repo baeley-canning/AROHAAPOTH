@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
     $price = (float)($_POST['price'] ?? 0);
     $offerPrice = (float)($_POST['offer_price'] ?? 0);
     $category = trim($_POST['category'] ?? '');
-    $imagesRaw = trim($_POST['images'] ?? '');
+    $existingImagesRaw = trim($_POST['existing_images'] ?? '');
     $imageAlt = trim($_POST['image_alt'] ?? '');
     $seoTitle = trim($_POST['seo_title'] ?? '');
     $seoDescription = trim($_POST['seo_description'] ?? '');
@@ -99,8 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
         }
     }
 
-    $images = array_values(array_filter(array_map('trim', explode(',', $imagesRaw))));
-    $images = array_merge($uploadedImages, $images);
+    $existingImages = array_values(array_filter(array_map('trim', explode(',', $existingImagesRaw))));
+    $images = array_merge($existingImages, $uploadedImages);
     $images = array_values(array_unique(array_filter($images)));
     $imagesJson = $images ? json_encode($images) : json_encode(['/images/aroha_product_balm.svg']);
 
@@ -170,9 +170,7 @@ render_header($id ? 'Edit Product' : 'Add Product');
         <input type="file" name="images_upload[]" accept="image/*" multiple>
         <span class="admin-muted">Uploads go to /images/uploads and will be added automatically.</span>
 
-        <label>Images (comma separated URLs)</label>
-        <textarea name="images" placeholder="/images/aroha_product_balm.svg, /images/aroha_product_balm.svg"><?php echo htmlspecialchars($product['images'] ?? ''); ?></textarea>
-        <span class="admin-muted">Upload images to /images and paste the paths here.</span>
+        <input type="hidden" name="existing_images" value="<?php echo htmlspecialchars($product['images'] ?? ''); ?>">
 
         <label>Image Alt Text (SEO)</label>
         <input type="text" name="image_alt" value="<?php echo htmlspecialchars($product['image_alt'] ?? ''); ?>">

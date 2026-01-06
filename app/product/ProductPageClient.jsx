@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAppContext } from "@/context/AppContext";
 import ProductDetail from "@/components/ProductDetail";
 
 const ProductPageClient = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const router = useRouter();
   const { products } = useAppContext();
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +31,7 @@ const ProductPageClient = () => {
   useEffect(() => {
     if (!id) {
       setIsLoading(false);
+      router.replace("/all-products");
       return;
     }
 
@@ -58,7 +60,7 @@ const ProductPageClient = () => {
     };
 
     fetchProduct();
-  }, [id, basePath, products]);
+  }, [id, basePath, products, router]);
 
   useEffect(() => {
     if (!product) return;
