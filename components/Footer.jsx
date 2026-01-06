@@ -21,7 +21,7 @@ const Footer = () => {
             NZ shipping, 14-day returns on unopened items, and secure checkout via Stripe.
           </p>
           <div className="flex items-center gap-4 mt-6">
-            <a href="https://www.facebook.com/arohaapothecary" aria-label="Facebook">
+            <a href="https://www.facebook.com/profile.php?id=61573300059646" aria-label="Facebook">
               <Image src={assets.facebook_icon} alt="facebook_icon" />
             </a>
             <a href="https://www.instagram.com/arohaapothecary" aria-label="Instagram">
