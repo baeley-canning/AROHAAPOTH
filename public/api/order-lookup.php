@@ -47,6 +47,8 @@ echo json_encode([
     'status' => $order['status'] ?? 'pending',
     'paymentStatus' => $order['payment_status'] ?? '',
     'refundStatus' => $order['refund_status'] ?? '',
+    'fulfillmentStatus' => $order['fulfillment_status'] ?? 'pending',
+    'trackingUrl' => $order['tracking_url'] ?? '',
     'amountTotal' => (int)($order['amount_total'] ?? 0),
     'amountRefunded' => (int)($order['amount_refunded'] ?? 0),
     'currency' => $order['currency'] ?? 'nzd',

@@ -167,6 +167,24 @@ body {
   color: #8a5b1d;
 }
 
+.admin-status.packing {
+  background: #f0efe6;
+  border-color: #e1dccb;
+  color: #6a5f52;
+}
+
+.admin-status.shipped {
+  background: #e2edf5;
+  border-color: #c7dbea;
+  color: #2f5a7a;
+}
+
+.admin-status.delivered {
+  background: #e2f0e8;
+  border-color: #c8e2d2;
+  color: #2f6a4a;
+}
+
 .admin-status.expired {
   background: #e7e2db;
   border-color: #d7ccc0;

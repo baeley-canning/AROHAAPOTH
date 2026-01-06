@@ -43,6 +43,21 @@ $ref = trim($_GET['ref'] ?? '');
 $order = null;
 $items = [];
 $dbReady = (bool)$pdo;
+$message = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo && $ref !== '') {
+    $status = strtolower(trim($_POST['fulfillment_status'] ?? ''));
+    $allowed = ['pending', 'packing', 'shipped', 'delivered'];
+    if (!in_array($status, $allowed, true)) {
+        $status = 'pending';
+    }
+    $trackingUrl = trim($_POST['tracking_url'] ?? '');
+    $trackingUrl = $trackingUrl !== '' ? $trackingUrl : null;
+
+    $stmt = $pdo->prepare('UPDATE orders SET fulfillment_status = ?, tracking_url = ? WHERE order_ref = ?');
+    $stmt->execute([$status, $trackingUrl, $ref]);
+    $message = 'Fulfillment status updated.';
+}
 
 if ($pdo && $ref !== '') {
     $stmt = $pdo->prepare('SELECT * FROM orders WHERE order_ref = ?');
@@ -65,6 +80,10 @@ render_header($order ? ('Order ' . $order['order_ref']) : 'Order details');
     </div>
     <a class="admin-button" href="/admin/orders.php">Back to orders</a>
 </div>
+
+<?php if ($message): ?>
+    <p class="admin-muted"><?php echo htmlspecialchars($message); ?></p>
+<?php endif; ?>
 
 <?php if (!$dbReady): ?>
     <p class="admin-muted">Database not configured. Update config.php and run /admin/install.php.</p>
@@ -111,6 +130,33 @@ render_header($order ? ('Order ' . $order['order_ref']) : 'Order details');
     </div>
 
     <div class="admin-card" style="margin-top: 16px;">
+        <h3 style="margin-top: 0;">Fulfillment</h3>
+        <form method="post" class="admin-form" style="margin-top: 12px;">
+            <label>Order stage</label>
+            <div class="admin-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+                <?php
+                $currentStatus = strtolower($order['fulfillment_status'] ?? 'pending');
+                $options = ['pending' => 'Pending', 'packing' => 'Packing', 'shipped' => 'Shipped', 'delivered' => 'Delivered'];
+                foreach ($options as $value => $label):
+                ?>
+                    <label style="display:flex; gap:8px; align-items:center; font-size:13px;">
+                        <input type="radio" name="fulfillment_status" value="<?php echo $value; ?>" <?php echo $currentStatus === $value ? 'checked' : ''; ?>>
+                        <?php echo htmlspecialchars($label); ?>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+
+            <label>Tracking link (optional)</label>
+            <input type="url" name="tracking_url" value="<?php echo htmlspecialchars($order['tracking_url'] ?? ''); ?>" placeholder="https://...">
+            <span class="admin-muted">If you have a courier tracking link, paste it here.</span>
+
+            <div style="margin-top: 16px;">
+                <button class="admin-button primary" type="submit">Save fulfillment status</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="admin-card" style="margin-top: 16px;">
         <h3 style="margin-top: 0;">Items</h3>
         <?php if (!$items): ?>
             <p class="admin-muted">No items recorded for this order.</p>
@@ -144,6 +190,11 @@ render_header($order ? ('Order ' . $order['order_ref']) : 'Order details');
             <div class="admin-muted"><?php echo nl2br(htmlspecialchars($order['shipping_address'])); ?></div>
         <?php else: ?>
             <p class="admin-muted">No shipping address captured yet.</p>
+        <?php endif; ?>
+        <?php if (!empty($order['tracking_url'])): ?>
+            <p class="admin-muted" style="margin-top: 12px;">
+                Tracking: <a class="admin-link" href="<?php echo htmlspecialchars($order['tracking_url']); ?>" target="_blank" rel="noopener">Open tracking</a>
+            </p>
         <?php endif; ?>
     </div>
 

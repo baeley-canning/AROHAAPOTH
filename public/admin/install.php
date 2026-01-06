@@ -69,6 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
             currency VARCHAR(8),
             payment_status VARCHAR(32),
             refund_status VARCHAR(32),
+            fulfillment_status VARCHAR(32) DEFAULT "pending",
+            tracking_url VARCHAR(255),
             status VARCHAR(32) DEFAULT "pending",
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

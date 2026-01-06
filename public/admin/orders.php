@@ -31,6 +31,31 @@ function status_class($status)
     return $status;
 }
 
+function fulfillment_label($status)
+{
+    $status = strtolower(trim((string)$status));
+    $labels = [
+        'pending' => 'Pending',
+        'packing' => 'Packing',
+        'shipped' => 'Shipped',
+        'delivered' => 'Delivered',
+    ];
+    if ($status === '') {
+        $status = 'pending';
+    }
+    return $labels[$status] ?? ucfirst($status);
+}
+
+function fulfillment_class($status)
+{
+    $status = strtolower(trim((string)$status));
+    $allowed = ['pending', 'packing', 'shipped', 'delivered'];
+    if (!in_array($status, $allowed, true)) {
+        $status = 'pending';
+    }
+    return $status;
+}
+
 $orders = [];
 $dbReady = (bool)$pdo;
 if ($pdo) {
@@ -59,6 +84,7 @@ render_header('Orders');
             <th>Order</th>
             <th>Customer</th>
             <th>Status</th>
+            <th>Fulfillment</th>
             <th>Total</th>
             <th>Items</th>
             <th>Date</th>
@@ -86,6 +112,11 @@ render_header('Orders');
                 <td>
                     <span class="admin-status <?php echo status_class($order['status'] ?? 'pending'); ?>">
                         <?php echo htmlspecialchars(status_label($order['status'] ?? 'pending')); ?>
+                    </span>
+                </td>
+                <td>
+                    <span class="admin-status <?php echo fulfillment_class($order['fulfillment_status'] ?? 'pending'); ?>">
+                        <?php echo htmlspecialchars(fulfillment_label($order['fulfillment_status'] ?? 'pending')); ?>
                     </span>
                 </td>
                 <td>

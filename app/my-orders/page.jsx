@@ -123,7 +123,7 @@ const MyOrders = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
                 <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
                   <p className="text-ink-900 font-medium">Total</p>
                   <p className="mt-2 text-ink-700">{formatMoney(result.amountTotal, result.currency)}</p>
@@ -139,6 +139,22 @@ const MyOrders = () => {
                   {result.refundStatus ? (
                     <p className="text-xs text-ink-500 mt-2">Refund: {result.refundStatus}</p>
                   ) : null}
+                </div>
+                <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
+                  <p className="text-ink-900 font-medium">Fulfillment</p>
+                  <p className="mt-2 text-ink-700">{result.fulfillmentStatus || "Pending"}</p>
+                  {result.trackingUrl ? (
+                    <a
+                      className="mt-2 inline-flex text-xs text-ink-700 underline underline-offset-4"
+                      href={result.trackingUrl}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Tracking link
+                    </a>
+                  ) : (
+                    <p className="text-xs text-ink-500 mt-2">Tracking appears after dispatch.</p>
+                  )}
                 </div>
                 <div className="rounded-2xl border border-linen-100/70 bg-linen-50/80 p-4">
                   <p className="text-ink-900 font-medium">Shipping</p>
