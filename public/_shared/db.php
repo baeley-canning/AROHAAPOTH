@@ -28,6 +28,7 @@ function db()
     }
 
     ensure_product_columns($pdo);
+    ensure_order_columns($pdo);
     return $pdo;
 }
 
@@ -51,6 +52,36 @@ function ensure_product_columns($pdo)
             $stmt->execute([$name]);
             if (!$stmt->fetch()) {
                 $pdo->exec("ALTER TABLE products ADD COLUMN {$name} {$definition}");
+            }
+        } catch (Throwable $error) {
+            // Ignore if privileges or table are unavailable.
+        }
+    }
+}
+
+function ensure_order_columns($pdo)
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    $columns = [
+        'customer_name' => 'VARCHAR(255) DEFAULT NULL',
+        'customer_phone' => 'VARCHAR(64) DEFAULT NULL',
+        'shipping_address' => 'TEXT',
+        'payment_status' => 'VARCHAR(32) DEFAULT NULL',
+        'amount_refunded' => 'INT DEFAULT 0',
+        'refund_status' => 'VARCHAR(32) DEFAULT NULL',
+    ];
+
+    foreach ($columns as $name => $definition) {
+        try {
+            $stmt = $pdo->prepare('SHOW COLUMNS FROM orders LIKE ?');
+            $stmt->execute([$name]);
+            if (!$stmt->fetch()) {
+                $pdo->exec("ALTER TABLE orders ADD COLUMN {$name} {$definition}");
             }
         } catch (Throwable $error) {
             // Ignore if privileges or table are unavailable.

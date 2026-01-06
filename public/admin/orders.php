@@ -4,6 +4,33 @@ require_once __DIR__ . '/_inc/layout.php';
 
 require_login();
 
+function status_label($status)
+{
+    $status = strtolower(trim((string)$status));
+    $labels = [
+        'paid' => 'Paid',
+        'pending' => 'Pending',
+        'failed' => 'Failed',
+        'refunded' => 'Refunded',
+        'refunding' => 'Refunding',
+        'expired' => 'Expired',
+    ];
+    if ($status === '') {
+        $status = 'pending';
+    }
+    return $labels[$status] ?? ucfirst($status);
+}
+
+function status_class($status)
+{
+    $status = strtolower(trim((string)$status));
+    $allowed = ['paid', 'pending', 'failed', 'refunded', 'refunding', 'expired'];
+    if (!in_array($status, $allowed, true)) {
+        $status = 'pending';
+    }
+    return $status;
+}
+
 $orders = [];
 $dbReady = (bool)$pdo;
 if ($pdo) {
@@ -35,6 +62,7 @@ render_header('Orders');
             <th>Total</th>
             <th>Items</th>
             <th>Date</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -49,9 +77,17 @@ render_header('Orders');
             }
             ?>
             <tr>
-                <td><?php echo htmlspecialchars($order['order_ref']); ?></td>
+                <td>
+                    <a class="admin-link" href="/admin/order.php?ref=<?php echo urlencode($order['order_ref']); ?>">
+                        <?php echo htmlspecialchars($order['order_ref']); ?>
+                    </a>
+                </td>
                 <td><?php echo htmlspecialchars($order['email'] ?? 'Pending'); ?></td>
-                <td><?php echo htmlspecialchars($order['status']); ?></td>
+                <td>
+                    <span class="admin-status <?php echo status_class($order['status'] ?? 'pending'); ?>">
+                        <?php echo htmlspecialchars(status_label($order['status'] ?? 'pending')); ?>
+                    </span>
+                </td>
                 <td>
                     <?php
                     $total = isset($order['amount_total']) ? (int)$order['amount_total'] : 0;
@@ -60,6 +96,9 @@ render_header('Orders');
                 </td>
                 <td><?php echo htmlspecialchars(implode(', ', $itemText)); ?></td>
                 <td><?php echo htmlspecialchars($order['created_at']); ?></td>
+                <td>
+                    <a class="admin-button" href="/admin/order.php?ref=<?php echo urlencode($order['order_ref']); ?>">View</a>
+                </td>
             </tr>
         <?php endforeach; ?>
         </tbody>

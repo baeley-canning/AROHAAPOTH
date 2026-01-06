@@ -75,6 +75,16 @@ body {
   color: #7a6a5b;
 }
 
+.admin-link {
+  color: #2b241f;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.admin-link:hover {
+  text-decoration: underline;
+}
+
 .admin-form label {
   display: block;
   margin-top: 14px;
@@ -113,4 +123,73 @@ body {
   padding: 10px 14px;
   border-radius: 12px;
   border: 1px solid #e6dccf;
+}
+
+.admin-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid transparent;
+}
+
+.admin-status.paid {
+  background: #e3efe2;
+  border-color: #cde1cb;
+  color: #2f5e3a;
+}
+
+.admin-status.pending {
+  background: #f6f1e8;
+  border-color: #e6dccf;
+  color: #7a6a5b;
+}
+
+.admin-status.failed {
+  background: #f6e1e1;
+  border-color: #e7c9c9;
+  color: #7a2d2d;
+}
+
+.admin-status.refunded {
+  background: #ece4f6;
+  border-color: #dcc9e7;
+  color: #5c2c7a;
+}
+
+.admin-status.refunding {
+  background: #f5ecd9;
+  border-color: #e6d1a8;
+  color: #8a5b1d;
+}
+
+.admin-status.expired {
+  background: #e7e2db;
+  border-color: #d7ccc0;
+  color: #62584d;
+}
+
+.admin-detail-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.admin-detail {
+  background: #fdfbf7;
+  border: 1px solid #e8e2d6;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.admin-detail h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a6a5b;
 }

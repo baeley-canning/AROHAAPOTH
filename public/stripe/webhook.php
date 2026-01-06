@@ -69,21 +69,109 @@ if (!$pdo) {
     exit;
 }
 
-if ($event['type'] === 'checkout.session.completed') {
-    $session = $event['data']['object'] ?? [];
-    $orderRef = $session['client_reference_id'] ?? '';
-    if ($orderRef !== '') {
-        $stmt = $pdo->prepare('UPDATE orders SET status = ?, stripe_session_id = ?, stripe_payment_intent_id = ?, email = ?, amount_total = ?, currency = ? WHERE order_ref = ?');
-        $stmt->execute([
-            'paid',
-            $session['id'] ?? '',
-            $session['payment_intent'] ?? '',
-            $session['customer_details']['email'] ?? '',
-            $session['amount_total'] ?? 0,
-            $session['currency'] ?? 'nzd',
-            $orderRef,
-        ]);
+function format_address($address)
+{
+    if (!is_array($address)) {
+        return '';
     }
+
+    $lines = [];
+    $line1 = trim((string)($address['line1'] ?? ''));
+    $line2 = trim((string)($address['line2'] ?? ''));
+    if ($line1 !== '') {
+        $lines[] = $line1;
+    }
+    if ($line2 !== '') {
+        $lines[] = $line2;
+    }
+
+    $city = trim((string)($address['city'] ?? ''));
+    $state = trim((string)($address['state'] ?? ''));
+    $postal = trim((string)($address['postal_code'] ?? ''));
+    $cityLine = trim(implode(' ', array_filter([$city, $state, $postal])));
+    if ($cityLine !== '') {
+        $lines[] = $cityLine;
+    }
+
+    $country = trim((string)($address['country'] ?? ''));
+    if ($country !== '') {
+        $lines[] = $country;
+    }
+
+    return implode("\n", $lines);
+}
+
+switch ($event['type']) {
+    case 'checkout.session.completed':
+        $session = $event['data']['object'] ?? [];
+        $orderRef = $session['client_reference_id'] ?? '';
+        if ($orderRef !== '') {
+            $customer = $session['customer_details'] ?? [];
+            $shipping = $session['shipping_details'] ?? [];
+            $address = $customer['address'] ?? ($shipping['address'] ?? []);
+            $paymentStatus = $session['payment_status'] ?? '';
+            $status = $paymentStatus === 'paid' ? 'paid' : ($paymentStatus ?: 'pending');
+
+            $stmt = $pdo->prepare('UPDATE orders SET status = ?, stripe_session_id = ?, stripe_payment_intent_id = ?, email = ?, amount_total = ?, currency = ?, customer_name = ?, customer_phone = ?, shipping_address = ?, payment_status = ? WHERE order_ref = ?');
+            $stmt->execute([
+                $status,
+                $session['id'] ?? '',
+                $session['payment_intent'] ?? '',
+                $customer['email'] ?? '',
+                $session['amount_total'] ?? 0,
+                $session['currency'] ?? 'nzd',
+                $customer['name'] ?? ($shipping['name'] ?? ''),
+                $customer['phone'] ?? '',
+                format_address($address),
+                $paymentStatus,
+                $orderRef,
+            ]);
+        }
+        break;
+    case 'checkout.session.expired':
+        $session = $event['data']['object'] ?? [];
+        $orderRef = $session['client_reference_id'] ?? '';
+        if ($orderRef !== '') {
+            $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE order_ref = ?');
+            $stmt->execute(['expired', 'expired', $orderRef]);
+        } elseif (!empty($session['id'])) {
+            $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE stripe_session_id = ?');
+            $stmt->execute(['expired', 'expired', $session['id']]);
+        }
+        break;
+    case 'payment_intent.payment_failed':
+        $intent = $event['data']['object'] ?? [];
+        $paymentIntentId = $intent['id'] ?? '';
+        if ($paymentIntentId !== '') {
+            $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE stripe_payment_intent_id = ?');
+            $stmt->execute(['failed', 'failed', $paymentIntentId]);
+        }
+        break;
+    case 'charge.refunded':
+        $charge = $event['data']['object'] ?? [];
+        $paymentIntentId = $charge['payment_intent'] ?? '';
+        if ($paymentIntentId !== '') {
+            $amountRefunded = (int)($charge['amount_refunded'] ?? 0);
+            $stmt = $pdo->prepare('UPDATE orders SET status = ?, amount_refunded = ?, refund_status = ?, payment_status = ? WHERE stripe_payment_intent_id = ?');
+            $stmt->execute(['refunded', $amountRefunded, 'refunded', 'refunded', $paymentIntentId]);
+        }
+        break;
+    case 'charge.refund.updated':
+        $refund = $event['data']['object'] ?? [];
+        $paymentIntentId = $refund['payment_intent'] ?? '';
+        if ($paymentIntentId !== '') {
+            $refundStatus = $refund['status'] ?? '';
+            $status = 'refunding';
+            if ($refundStatus === 'succeeded') {
+                $status = 'refunded';
+            } elseif ($refundStatus === 'failed' || $refundStatus === 'canceled') {
+                $status = 'failed';
+            }
+            $amountRefunded = (int)($refund['amount'] ?? 0);
+            $stmt = $pdo->prepare('UPDATE orders SET status = ?, amount_refunded = ?, refund_status = ? WHERE stripe_payment_intent_id = ?');
+            $stmt->execute([$status, $amountRefunded, $refundStatus, $paymentIntentId]);
+        }
+        break;
 }
 
 echo json_encode(['received' => true]);

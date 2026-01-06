@@ -6,10 +6,10 @@ import { useAppContext } from '@/context/AppContext';
 
 const ProductCard = ({ product }) => {
 
-    const { currency, router, addToCart } = useAppContext()
+    const { currency, addToCart } = useAppContext()
     const productId = product._id || product.id || "";
     const productLink = productId
-        ? { pathname: "/product", query: { id: productId } }
+        ? `/product/${encodeURIComponent(productId)}`
         : "/all-products";
     const imageAlt = product.imageAlt || product.name;
 
@@ -61,7 +61,9 @@ const ProductCard = ({ product }) => {
                     onClick={(event) => {
                         event.preventDefault();
                         event.stopPropagation();
-                        addToCart(product._id);
+                        if (productId) {
+                            addToCart(productId);
+                        }
                     }}
                     className="max-sm:hidden px-4 py-1.5 text-ink-700 border border-ink-900/15 rounded-full text-xs hover:border-ink-900/35 hover:bg-linen-100 transition"
                 >
