@@ -5,7 +5,8 @@ import { useAppContext } from "@/context/AppContext";
 
 const Navbar = () => {
 
-  const { router } = useAppContext();
+  const { router, getCartCount } = useAppContext();
+  const cartCount = getCartCount();
 
   return (
     <nav className="flex items-center justify-between px-6 md:px-16 lg:px-32 py-4 border-b border-linen-100/80 text-ink-700 bg-linen-50/70 backdrop-blur">
@@ -42,8 +43,16 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="hidden md:flex items-center gap-4 text-xs uppercase tracking-[0.2em] text-sage-700">
-        Guest checkout
+      <div className="hidden md:flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-sage-700">
+        <Link
+          href="/cart"
+          className="btn-outline !text-xs !px-4 !py-2"
+        >
+          Checkout
+        </Link>
+        <span className="rounded-full bg-sage-600/10 px-2 py-1 text-[10px] tracking-[0.2em] text-sage-700">
+          Cart {cartCount}
+        </span>
       </div>
     </nav>
   );
