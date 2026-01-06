@@ -7,7 +7,10 @@ import { useAppContext } from '@/context/AppContext';
 const ProductCard = ({ product }) => {
 
     const { currency, router, addToCart } = useAppContext()
-    const productLink = `/product?id=${product._id}`;
+    const productId = product._id || product.id || "";
+    const productLink = productId
+        ? { pathname: "/product", query: { id: productId } }
+        : "/all-products";
     const imageAlt = product.imageAlt || product.name;
 
     return (

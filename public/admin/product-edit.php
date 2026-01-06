@@ -104,6 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo) {
     $images = array_values(array_unique(array_filter($images)));
     $imagesJson = $images ? json_encode($images) : json_encode(['/images/aroha_product_balm.svg']);
 
+    if ($idValue === '' && $name !== '') {
+        $generated = preg_replace('/[^a-z0-9]+/i', '-', strtolower($name));
+        $generated = trim($generated, '-');
+        if ($generated !== '') {
+            $idValue = $generated;
+        }
+    }
+
     if ($pdo && $idValue !== '' && $name !== '') {
         if ($id !== '') {
             $stmt = $pdo->prepare('UPDATE products SET name = ?, description = ?, price = ?, offer_price = ?, category = ?, images = ?, image_alt = ?, seo_title = ?, seo_description = ?, is_active = ? WHERE id = ?');
@@ -142,8 +150,8 @@ render_header($id ? 'Edit Product' : 'Add Product');
 <div class="admin-card">
     <form method="post" class="admin-form" enctype="multipart/form-data">
         <label>Product ID (slug)</label>
-        <input type="text" name="id" value="<?php echo htmlspecialchars($id ?: ($product['id'] ?? '')); ?>" <?php echo $id ? 'readonly' : 'required'; ?>>
-        <span class="admin-muted">Use lowercase and hyphens, e.g. balm-kawakawa.</span>
+        <input type="text" name="id" value="<?php echo htmlspecialchars($id ?: ($product['id'] ?? '')); ?>" <?php echo $id ? 'readonly' : ''; ?>>
+        <span class="admin-muted">Leave blank to auto-generate from the name.</span>
 
         <label>Name</label>
         <input type="text" name="name" value="<?php echo htmlspecialchars($product['name'] ?? ''); ?>" required>
