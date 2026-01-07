@@ -13,8 +13,8 @@ const NewsLetter = () => {
       </p>
       <p className="text-sm text-ink-500 pb-6">
         Prefer email?{" "}
-        <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:arohaapothecary@gmail.com">
-          arohaapothecary@gmail.com
+        <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:hello@arohaapothecary.com">
+          hello@arohaapothecary.com
         </a>
       </p>
       <div className="flex items-center justify-between max-w-2xl w-full md:h-14 h-12">
@@ -32,3 +32,4 @@ const NewsLetter = () => {
 };
 
 export default NewsLetter;
+

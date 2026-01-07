@@ -52,8 +52,8 @@ const AboutPage = () => {
             <h2 className="text-xl font-semibold text-ink-900">Get in touch</h2>
             <p>
               Email us at{" "}
-              <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:arohaapothecary@gmail.com">
-                arohaapothecary@gmail.com
+              <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:hello@arohaapothecary.com">
+                hello@arohaapothecary.com
               </a>{" "}
               to share your story or request a custom order.
             </p>
@@ -66,3 +66,4 @@ const AboutPage = () => {
 };
 
 export default AboutPage;
+

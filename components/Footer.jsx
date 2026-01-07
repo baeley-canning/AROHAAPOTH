@@ -73,7 +73,7 @@ const Footer = () => {
           <h2 className="font-medium text-ink-900 mb-5">Get in touch</h2>
           <div className="text-sm space-y-2">
             <p>Lower North Island valley, Aotearoa New Zealand</p>
-            <p>arohaapothecary@gmail.com</p>
+            <p>hello@arohaapothecary.com</p>
           </div>
         </div>
       </div>
@@ -89,3 +89,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

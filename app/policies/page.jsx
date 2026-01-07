@@ -74,7 +74,7 @@ const PoliciesPage = () => {
             <h2 className="text-xl font-semibold text-ink-900">Contact</h2>
             <p>
               For any questions about returns or your order, email us at
-              <span className="text-ink-900"> arohaapothecary@gmail.com</span>.
+              <span className="text-ink-900"> hello@arohaapothecary.com</span>.
             </p>
           </section>
         </div>
@@ -85,3 +85,4 @@ const PoliciesPage = () => {
 };
 
 export default PoliciesPage;
+

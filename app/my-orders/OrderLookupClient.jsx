@@ -207,8 +207,8 @@ const OrderLookupClient = () => {
             <p className="text-ink-900 font-medium">Need help?</p>
             <p className="mt-2">
               Email{" "}
-              <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:arohaapothecary@gmail.com">
-                arohaapothecary@gmail.com
+              <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:hello@arohaapothecary.com">
+                hello@arohaapothecary.com
               </a>{" "}
               with your order reference and we will help.
             </p>
@@ -221,3 +221,4 @@ const OrderLookupClient = () => {
 };
 
 export default OrderLookupClient;
+

@@ -25,8 +25,8 @@ const OrderPlacedClient = () => {
         <p className="text-sm md:text-base text-ink-500 mt-3">
           Thank you for supporting Aroha Apothecary. Stripe will email your receipt and
           shipping confirmation. If you need anything, reach us at{" "}
-          <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:arohaapothecary@gmail.com">
-            arohaapothecary@gmail.com
+          <a className="text-ink-900 hover:text-ink-700 transition" href="mailto:hello@arohaapothecary.com">
+            hello@arohaapothecary.com
           </a>
           .
         </p>
@@ -56,3 +56,4 @@ const OrderPlacedClient = () => {
 };
 
 export default OrderPlacedClient;
+
