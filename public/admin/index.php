@@ -25,14 +25,14 @@ render_header('Admin Dashboard');
 <?php endif; ?>
 
 <div class="admin-grid">
-    <div class="admin-pill">
+    <a class="admin-pill admin-pill-link" href="/admin/products.php">
         <strong><?php echo $productCount; ?></strong>
         <div class="admin-muted">Products</div>
-    </div>
-    <div class="admin-pill">
+    </a>
+    <a class="admin-pill admin-pill-link" href="/admin/orders.php">
         <strong><?php echo $orderCount; ?></strong>
         <div class="admin-muted">Orders</div>
-    </div>
+    </a>
     <div class="admin-pill">
         <strong>Stripe</strong>
         <div class="admin-muted">Secure checkout</div>

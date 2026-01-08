@@ -125,6 +125,18 @@ body {
   border: 1px solid #e6dccf;
 }
 
+.admin-pill-link {
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.admin-pill-link:hover {
+  border-color: #cbbca8;
+  box-shadow: 0 12px 24px -20px rgba(43, 36, 31, 0.5);
+  transform: translateY(-1px);
+}
+
 .admin-pill-group {
   display: flex;
   flex-wrap: wrap;
