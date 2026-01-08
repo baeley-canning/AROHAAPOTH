@@ -215,11 +215,6 @@ $params = [
     'cancel_url' => $cancelUrl,
     'line_items' => $lineItems,
     'customer_creation' => 'always',
-    'customer_update' => [
-        'name' => 'auto',
-        'address' => 'auto',
-        'shipping' => 'auto',
-    ],
     'billing_address_collection' => 'required',
     'shipping_address_collection' => [
         'allowed_countries' => ['NZ'],
