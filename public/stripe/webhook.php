@@ -128,6 +128,9 @@ switch ($event['type']) {
                 $orderRef,
             ]);
             send_order_notification($pdo, $orderRef);
+            if ($paymentStatus === 'paid') {
+                send_customer_notification($pdo, $orderRef, 'paid');
+            }
         }
         break;
     case 'checkout.session.expired':

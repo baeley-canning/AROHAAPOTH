@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/_inc/bootstrap.php';
 require_once __DIR__ . '/_inc/layout.php';
+require_once __DIR__ . '/../_shared/notify.php';
 
 require_login();
 
@@ -46,10 +47,14 @@ $dbReady = (bool)$pdo;
 $message = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo && $ref !== '') {
+    $action = $_POST['action'] ?? 'update_fulfillment';
     $status = strtolower(trim($_POST['fulfillment_status'] ?? ''));
     $allowed = ['pending', 'packing', 'shipped', 'delivered'];
     if (!in_array($status, $allowed, true)) {
         $status = 'pending';
+    }
+    if ($action === 'send_shipping_email') {
+        $status = 'shipped';
     }
     $trackingUrl = trim($_POST['tracking_url'] ?? '');
     $trackingUrl = $trackingUrl !== '' ? $trackingUrl : null;
@@ -57,6 +62,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo && $ref !== '') {
     $stmt = $pdo->prepare('UPDATE orders SET fulfillment_status = ?, tracking_url = ? WHERE order_ref = ?');
     $stmt->execute([$status, $trackingUrl, $ref]);
     $message = 'Fulfillment status updated.';
+
+    if ($action === 'send_shipping_email') {
+        $sent = send_customer_notification($pdo, $ref, 'shipped', true);
+        $message = $sent ? 'Shipping email sent.' : 'Unable to send shipping email. Check mail settings.';
+    }
 }
 
 if ($pdo && $ref !== '') {
@@ -158,8 +168,13 @@ render_header($order ? ('Order ' . $order['order_ref']) : 'Order details');
             <input type="url" name="tracking_url" value="<?php echo htmlspecialchars($order['tracking_url'] ?? ''); ?>" placeholder="https://...">
             <span class="admin-muted">If you have a courier tracking link, paste it here.</span>
 
-            <div style="margin-top: 16px;">
-                <button class="admin-button primary" type="submit">Save fulfillment status</button>
+            <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px;">
+                <button class="admin-button primary" type="submit" name="action" value="update_fulfillment">
+                    Save fulfillment status
+                </button>
+                <button class="admin-button" type="submit" name="action" value="send_shipping_email">
+                    Send shipping email
+                </button>
             </div>
         </form>
     </div>

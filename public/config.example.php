@@ -27,6 +27,9 @@ define('EMAIL_PORTAL_URL', '');
 define('ORDER_NOTIFICATION_EMAIL', '');
 define('ORDER_FROM_EMAIL', '');
 
+// Optional: customer emails (order confirmation/shipping)
+define('CUSTOMER_FROM_EMAIL', '');
+
 // Optional: SMTP mailer (recommended for reliable delivery)
 define('SMTP_HOST', '');
 define('SMTP_PORT', 465);

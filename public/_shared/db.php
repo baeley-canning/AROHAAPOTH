@@ -77,6 +77,8 @@ function ensure_order_columns($pdo)
         'fulfillment_status' => 'VARCHAR(32) DEFAULT NULL',
         'tracking_url' => 'VARCHAR(255) DEFAULT NULL',
         'admin_notified_at' => 'DATETIME DEFAULT NULL',
+        'customer_notified_paid_at' => 'DATETIME DEFAULT NULL',
+        'customer_notified_shipped_at' => 'DATETIME DEFAULT NULL',
     ];
 
     foreach ($columns as $name => $definition) {
