@@ -219,6 +219,11 @@ $params = [
 
 if ($orderRef) {
     $params['client_reference_id'] = $orderRef;
+    $params['payment_intent_data'] = [
+        'metadata' => [
+            'order_ref' => $orderRef,
+        ],
+    ];
 }
 
 $body = http_build_query($params);

@@ -241,9 +241,7 @@ switch ($event['type']) {
                 $paymentStatus,
                 $orderRef,
             ]);
-            if ($paymentStatus === 'paid') {
-                send_order_notification($pdo, $orderRef);
-            }
+            send_order_notification($pdo, $orderRef);
         }
         break;
     case 'checkout.session.expired':
@@ -252,17 +250,36 @@ switch ($event['type']) {
         if ($orderRef !== '') {
             $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE order_ref = ?');
             $stmt->execute(['expired', 'expired', $orderRef]);
+            send_order_notification($pdo, $orderRef);
         } elseif (!empty($session['id'])) {
             $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE stripe_session_id = ?');
             $stmt->execute(['expired', 'expired', $session['id']]);
+            $refStmt = $pdo->prepare('SELECT order_ref FROM orders WHERE stripe_session_id = ? LIMIT 1');
+            $refStmt->execute([$session['id']]);
+            $row = $refStmt->fetch();
+            if (!empty($row['order_ref'])) {
+                send_order_notification($pdo, $row['order_ref']);
+            }
         }
         break;
     case 'payment_intent.payment_failed':
         $intent = $event['data']['object'] ?? [];
         $paymentIntentId = $intent['id'] ?? '';
-        if ($paymentIntentId !== '') {
+        $metadata = $intent['metadata'] ?? [];
+        $orderRef = $metadata['order_ref'] ?? '';
+        if ($orderRef !== '') {
+            $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ?, stripe_payment_intent_id = ? WHERE order_ref = ?');
+            $stmt->execute(['failed', 'failed', $paymentIntentId, $orderRef]);
+            send_order_notification($pdo, $orderRef);
+        } elseif ($paymentIntentId !== '') {
             $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE stripe_payment_intent_id = ?');
             $stmt->execute(['failed', 'failed', $paymentIntentId]);
+            $refStmt = $pdo->prepare('SELECT order_ref FROM orders WHERE stripe_payment_intent_id = ? LIMIT 1');
+            $refStmt->execute([$paymentIntentId]);
+            $row = $refStmt->fetch();
+            if (!empty($row['order_ref'])) {
+                send_order_notification($pdo, $row['order_ref']);
+            }
         }
         break;
     case 'charge.refunded':
