@@ -125,6 +125,124 @@ function build_base_path()
     return rtrim($basePath, '/');
 }
 
+function smtp_read_response($socket)
+{
+    $data = '';
+    while ($line = fgets($socket, 515)) {
+        $data .= $line;
+        if (preg_match('/^\d{3} /', $line)) {
+            break;
+        }
+    }
+    return $data;
+}
+
+function smtp_expect($socket, $codes)
+{
+    $response = smtp_read_response($socket);
+    foreach ((array)$codes as $code) {
+        if (strpos($response, (string)$code) === 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function smtp_command($socket, $command, $expectCodes)
+{
+    fwrite($socket, $command . "\r\n");
+    return smtp_expect($socket, $expectCodes);
+}
+
+function smtp_send($host, $port, $secure, $username, $password, $from, $to, $subject, $body)
+{
+    $transport = '';
+    $secure = strtolower($secure);
+    if ($secure === 'ssl') {
+        $transport = 'ssl://';
+    }
+    $socket = fsockopen($transport . $host, $port, $errno, $errstr, 20);
+    if (!$socket) {
+        return false;
+    }
+
+    if (!smtp_expect($socket, 220)) {
+        fclose($socket);
+        return false;
+    }
+
+    if (!smtp_command($socket, 'EHLO localhost', 250)) {
+        fclose($socket);
+        return false;
+    }
+
+    if ($secure === 'tls') {
+        if (!smtp_command($socket, 'STARTTLS', 220)) {
+            fclose($socket);
+            return false;
+        }
+        if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+            fclose($socket);
+            return false;
+        }
+        if (!smtp_command($socket, 'EHLO localhost', 250)) {
+            fclose($socket);
+            return false;
+        }
+    }
+
+    if ($username !== '' && $password !== '') {
+        if (!smtp_command($socket, 'AUTH LOGIN', 334)) {
+            fclose($socket);
+            return false;
+        }
+        if (!smtp_command($socket, base64_encode($username), 334)) {
+            fclose($socket);
+            return false;
+        }
+        if (!smtp_command($socket, base64_encode($password), 235)) {
+            fclose($socket);
+            return false;
+        }
+    }
+
+    if (!smtp_command($socket, 'MAIL FROM:<' . $from . '>', 250)) {
+        fclose($socket);
+        return false;
+    }
+
+    if (!smtp_command($socket, 'RCPT TO:<' . $to . '>', [250, 251])) {
+        fclose($socket);
+        return false;
+    }
+
+    if (!smtp_command($socket, 'DATA', 354)) {
+        fclose($socket);
+        return false;
+    }
+
+    $headers = [
+        'From: Aroha Apothecary <' . $from . '>',
+        'To: <' . $to . '>',
+        'Subject: ' . $subject,
+        'Reply-To: ' . $from,
+        'MIME-Version: 1.0',
+        'Content-Type: text/plain; charset=UTF-8',
+    ];
+    $message = implode("\r\n", $headers) . "\r\n\r\n" . $body;
+    $message = str_replace("\n.", "\n..", $message);
+    fwrite($socket, $message . "\r\n.\r\n");
+
+    if (!smtp_expect($socket, 250)) {
+        fclose($socket);
+        return false;
+    }
+
+    smtp_command($socket, 'QUIT', 221);
+    fclose($socket);
+    return true;
+}
+
 function send_order_notification($pdo, $orderRef)
 {
     $notifyEmail = '';
@@ -199,13 +317,24 @@ function send_order_notification($pdo, $orderRef)
     if (defined('ORDER_FROM_EMAIL') && trim((string)ORDER_FROM_EMAIL) !== '') {
         $fromEmail = trim((string)ORDER_FROM_EMAIL);
     }
-    $headers = [
-        'From: Aroha Apothecary <' . $fromEmail . '>',
-        'Reply-To: ' . $fromEmail,
-        'Content-Type: text/plain; charset=UTF-8',
-    ];
+    $sent = false;
+    if (defined('SMTP_HOST') && trim((string)SMTP_HOST) !== '') {
+        $smtpHost = trim((string)SMTP_HOST);
+        $smtpPort = defined('SMTP_PORT') ? (int)SMTP_PORT : 465;
+        $smtpSecure = defined('SMTP_SECURE') ? trim((string)SMTP_SECURE) : 'ssl';
+        $smtpUser = defined('SMTP_USER') ? trim((string)SMTP_USER) : '';
+        $smtpPass = defined('SMTP_PASS') ? (string)SMTP_PASS : '';
+        $sent = smtp_send($smtpHost, $smtpPort, $smtpSecure, $smtpUser, $smtpPass, $fromEmail, $notifyEmail, $subject, implode("\n", $lines));
+    }
 
-    $sent = @mail($notifyEmail, $subject, implode("\n", $lines), implode("\r\n", $headers));
+    if (!$sent) {
+        $headers = [
+            'From: Aroha Apothecary <' . $fromEmail . '>',
+            'Reply-To: ' . $fromEmail,
+            'Content-Type: text/plain; charset=UTF-8',
+        ];
+        $sent = @mail($notifyEmail, $subject, implode("\n", $lines), implode("\r\n", $headers));
+    }
     if ($sent) {
         try {
             $updateStmt = $pdo->prepare('UPDATE orders SET admin_notified_at = NOW() WHERE order_ref = ?');

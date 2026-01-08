@@ -27,6 +27,13 @@ define('EMAIL_PORTAL_URL', '');
 define('ORDER_NOTIFICATION_EMAIL', '');
 define('ORDER_FROM_EMAIL', '');
 
+// Optional: SMTP mailer (recommended for reliable delivery)
+define('SMTP_HOST', '');
+define('SMTP_PORT', 465);
+define('SMTP_SECURE', 'ssl'); // ssl or tls
+define('SMTP_USER', '');
+define('SMTP_PASS', '');
+
 // Stripe keys (optional here if you still use public/stripe/stripe-config.php)
 define('STRIPE_SECRET_KEY', 'sk_test_replace_me');
 define('STRIPE_WEBHOOK_SECRET', 'whsec_replace_me');
