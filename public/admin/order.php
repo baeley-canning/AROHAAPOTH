@@ -169,6 +169,20 @@ render_header($order ? ('Order ' . $order['order_ref']) : 'Order details');
             <label>Tracking link (optional)</label>
             <input type="url" name="tracking_url" value="<?php echo htmlspecialchars($order['tracking_url'] ?? ''); ?>" placeholder="https://...">
             <span class="admin-muted">If you have a courier tracking link, paste it here.</span>
+            <?php
+            $customerEmail = trim((string)($order['email'] ?? ''));
+            $shippingAddress = trim((string)($order['shipping_address'] ?? ''));
+            ?>
+            <div class="admin-muted" style="margin-top: 12px;">
+                <div>
+                    <strong>Shipping email:</strong>
+                    <?php echo $customerEmail !== '' ? htmlspecialchars($customerEmail) : 'Not captured yet.'; ?>
+                </div>
+                <div style="margin-top: 6px;">
+                    <strong>Shipping address:</strong><br>
+                    <?php echo $shippingAddress !== '' ? nl2br(htmlspecialchars($shippingAddress)) : 'Not captured yet.'; ?>
+                </div>
+            </div>
 
             <div style="margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px;">
                 <button class="admin-button primary" type="submit" name="action" value="update_fulfillment">
