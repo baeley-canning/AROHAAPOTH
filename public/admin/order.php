@@ -42,36 +42,109 @@ if (!function_exists('format_money')) {
     }
 }
 
+function verify_admin_password($pdo, $password)
+{
+    $password = (string)$password;
+    if ($password === '') {
+        return false;
+    }
+
+    $sessionUser = $_SESSION['admin_username'] ?? '';
+    $adminId = $_SESSION['admin_id'] ?? null;
+    $checkedDb = false;
+
+    if ($pdo && $adminId && (int)$adminId > 0) {
+        try {
+            $stmt = $pdo->prepare('SELECT username, password_hash FROM admins WHERE id = ? LIMIT 1');
+            $stmt->execute([(int)$adminId]);
+            $admin = $stmt->fetch();
+            $checkedDb = true;
+            if ($admin && password_verify($password, $admin['password_hash'])) {
+                return true;
+            }
+        } catch (Throwable $error) {
+            $checkedDb = false;
+        }
+    }
+
+    if ($pdo && !$checkedDb && $sessionUser !== '') {
+        try {
+            $stmt = $pdo->prepare('SELECT password_hash FROM admins WHERE username = ? LIMIT 1');
+            $stmt->execute([$sessionUser]);
+            $admin = $stmt->fetch();
+            $checkedDb = true;
+            if ($admin && password_verify($password, $admin['password_hash'])) {
+                return true;
+            }
+        } catch (Throwable $error) {
+            $checkedDb = false;
+        }
+    }
+
+    $configUser = defined('ADMIN_USERNAME') ? ADMIN_USERNAME : '';
+    $configHash = defined('ADMIN_PASSWORD_HASH') ? ADMIN_PASSWORD_HASH : '';
+    $configPass = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : '';
+
+    if ($configUser === '') {
+        return false;
+    }
+    if ($sessionUser !== '' && $sessionUser !== $configUser) {
+        return false;
+    }
+    if ($configHash !== '' && password_verify($password, $configHash)) {
+        return true;
+    }
+    if ($configPass !== '' && hash_equals($configPass, $password)) {
+        return true;
+    }
+
+    return false;
+}
+
 $ref = trim($_GET['ref'] ?? '');
 $order = null;
 $items = [];
 $dbReady = (bool)$pdo;
 $message = '';
+$error = '';
+$orderDeleted = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $pdo && $ref !== '') {
     $action = $_POST['action'] ?? 'update_fulfillment';
-    $status = strtolower(trim($_POST['fulfillment_status'] ?? ''));
-    $allowed = ['pending', 'packing', 'shipped', 'delivered'];
-    if (!in_array($status, $allowed, true)) {
-        $status = 'pending';
-    }
-    if ($action === 'send_shipping_email') {
-        $status = 'shipped';
-    }
-    $trackingUrl = trim($_POST['tracking_url'] ?? '');
-    $trackingUrl = $trackingUrl !== '' ? $trackingUrl : null;
+    if ($action === 'delete_order') {
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+        if (!verify_admin_password($pdo, $confirmPassword)) {
+            $error = 'Password incorrect. Order not deleted.';
+        } else {
+            $stmt = $pdo->prepare('DELETE FROM orders WHERE order_ref = ?');
+            $stmt->execute([$ref]);
+            $message = 'Order deleted.';
+            $orderDeleted = true;
+        }
+    } else {
+        $status = strtolower(trim($_POST['fulfillment_status'] ?? ''));
+        $allowed = ['pending', 'packing', 'shipped', 'delivered'];
+        if (!in_array($status, $allowed, true)) {
+            $status = 'pending';
+        }
+        if ($action === 'send_shipping_email') {
+            $status = 'shipped';
+        }
+        $trackingUrl = trim($_POST['tracking_url'] ?? '');
+        $trackingUrl = $trackingUrl !== '' ? $trackingUrl : null;
 
-    $stmt = $pdo->prepare('UPDATE orders SET fulfillment_status = ?, tracking_url = ? WHERE order_ref = ?');
-    $stmt->execute([$status, $trackingUrl, $ref]);
-    $message = 'Fulfillment status updated.';
+        $stmt = $pdo->prepare('UPDATE orders SET fulfillment_status = ?, tracking_url = ? WHERE order_ref = ?');
+        $stmt->execute([$status, $trackingUrl, $ref]);
+        $message = 'Fulfillment status updated.';
 
-    if ($action === 'send_shipping_email') {
-        $sent = send_customer_notification($pdo, $ref, 'shipped', true);
-        $message = $sent ? 'Shipping email sent.' : 'Unable to send shipping email. Check mail settings.';
+        if ($action === 'send_shipping_email') {
+            $sent = send_customer_notification($pdo, $ref, 'shipped', true);
+            $message = $sent ? 'Shipping email sent.' : 'Unable to send shipping email. Check mail settings.';
+        }
     }
 }
 
-if ($pdo && $ref !== '') {
+if ($pdo && $ref !== '' && !$orderDeleted) {
     $stmt = $pdo->prepare('SELECT * FROM orders WHERE order_ref = ?');
     $stmt->execute([$ref]);
     $order = $stmt->fetch();
@@ -96,9 +169,16 @@ render_header($order ? ('Order ' . $order['order_ref']) : 'Order details');
 <?php if ($message): ?>
     <p class="admin-muted"><?php echo htmlspecialchars($message); ?></p>
 <?php endif; ?>
+<?php if ($error): ?>
+    <p class="admin-muted" style="color:#9b3b32;"><?php echo htmlspecialchars($error); ?></p>
+<?php endif; ?>
 
 <?php if (!$dbReady): ?>
     <p class="admin-muted">Database not configured. Update config.php and run /admin/install.php.</p>
+<?php elseif ($orderDeleted): ?>
+    <div class="admin-card">
+        <p class="admin-muted">Order deleted.</p>
+    </div>
 <?php elseif (!$order): ?>
     <div class="admin-card">
         <p class="admin-muted">Order not found. Check the link and try again.</p>
@@ -241,6 +321,20 @@ render_header($order ? ('Order ' . $order['order_ref']) : 'Order details');
         <h3 style="margin-top: 0;">Stripe</h3>
         <div class="admin-muted">Session: <?php echo htmlspecialchars($order['stripe_session_id'] ?? ''); ?></div>
         <div class="admin-muted">Payment intent: <?php echo htmlspecialchars($order['stripe_payment_intent_id'] ?? ''); ?></div>
+    </div>
+
+    <div class="admin-card" style="margin-top: 16px; border-color: #f1d4d1;">
+        <h3 style="margin-top: 0;">Delete order</h3>
+        <p class="admin-muted">Remove test or declined orders. This cannot be undone.</p>
+        <form method="post" class="admin-form" style="margin-top: 12px;">
+            <label>Confirm password</label>
+            <input type="password" name="confirm_password" required placeholder="Enter your admin password">
+            <div style="margin-top: 12px;">
+                <button class="admin-button danger" type="submit" name="action" value="delete_order">
+                    Delete order
+                </button>
+            </div>
+        </form>
     </div>
 <?php endif; ?>
 <?php

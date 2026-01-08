@@ -54,6 +54,17 @@ body {
   border-color: #6a7b5e;
 }
 
+.admin-button.danger {
+  background: #9b3b32;
+  color: #fff;
+  border-color: #9b3b32;
+}
+
+.admin-button.danger:hover {
+  background: #7f2e27;
+  border-color: #7f2e27;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
