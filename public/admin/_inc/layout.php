@@ -17,6 +17,7 @@ function render_header($title)
                 <a href="/admin/index.php">Dashboard</a>
                 <a href="/admin/products.php">Products</a>
                 <a href="/admin/orders.php">Orders</a>
+                <a href="/admin/email.php">Email</a>
                 <a href="/admin/logout.php">Logout</a>
             </div>
     <?php

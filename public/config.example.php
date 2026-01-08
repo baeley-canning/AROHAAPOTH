@@ -20,6 +20,9 @@ define('ADMIN_USERNAME', 'owner');
 define('ADMIN_PASSWORD_HASH', '');
 define('ADMIN_PASSWORD', '');
 
+// Optional: link to webmail (used by /admin/email.php)
+define('EMAIL_PORTAL_URL', '');
+
 // Stripe keys (optional here if you still use public/stripe/stripe-config.php)
 define('STRIPE_SECRET_KEY', 'sk_test_replace_me');
 define('STRIPE_WEBHOOK_SECRET', 'whsec_replace_me');
