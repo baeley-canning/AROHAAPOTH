@@ -125,6 +125,52 @@ body {
   border: 1px solid #e6dccf;
 }
 
+.admin-pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.admin-pill-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.admin-pill-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 18px;
+  border-radius: 999px;
+  border: 1px solid #e1d7c9;
+  background: #fdfbf7;
+  color: #4b3f36;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-pill-label:hover {
+  background: #4f6b55;
+  border-color: #4f6b55;
+  color: #fff;
+}
+
+.admin-pill-input:checked + .admin-pill-label {
+  background: #4f6b55;
+  border-color: #4f6b55;
+  color: #fff;
+  box-shadow: 0 6px 16px -10px rgba(47, 94, 58, 0.8);
+}
+
+.admin-pill-input:focus-visible + .admin-pill-label {
+  box-shadow: 0 0 0 2px rgba(79, 107, 85, 0.3);
+}
+
 .admin-status {
   display: inline-flex;
   align-items: center;

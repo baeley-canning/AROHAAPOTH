@@ -133,14 +133,22 @@ render_header($order ? ('Order ' . $order['order_ref']) : 'Order details');
         <h3 style="margin-top: 0;">Fulfillment</h3>
         <form method="post" class="admin-form" style="margin-top: 12px;">
             <label>Order stage</label>
-            <div class="admin-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+            <div class="admin-pill-group">
                 <?php
                 $currentStatus = strtolower($order['fulfillment_status'] ?? 'pending');
                 $options = ['pending' => 'Pending', 'packing' => 'Packing', 'shipped' => 'Shipped', 'delivered' => 'Delivered'];
                 foreach ($options as $value => $label):
+                    $inputId = 'fulfillment-' . $value;
                 ?>
-                    <label style="display:flex; gap:8px; align-items:center; font-size:13px;">
-                        <input type="radio" name="fulfillment_status" value="<?php echo $value; ?>" <?php echo $currentStatus === $value ? 'checked' : ''; ?>>
+                    <input
+                        class="admin-pill-input"
+                        type="radio"
+                        id="<?php echo $inputId; ?>"
+                        name="fulfillment_status"
+                        value="<?php echo $value; ?>"
+                        <?php echo $currentStatus === $value ? 'checked' : ''; ?>
+                    >
+                    <label class="admin-pill-label" for="<?php echo $inputId; ?>">
                         <?php echo htmlspecialchars($label); ?>
                     </label>
                 <?php endforeach; ?>
