@@ -32,12 +32,14 @@ function status_class($status)
     return $status;
 }
 
-function format_money($amount, $currency)
-{
-    $amount = (int)$amount;
-    $currency = strtoupper((string)$currency);
-    $symbol = $currency === 'NZD' ? 'NZ$' : '$';
-    return $symbol . number_format($amount / 100, 2);
+if (!function_exists('format_money')) {
+    function format_money($amount, $currency)
+    {
+        $amount = (int)$amount;
+        $currency = strtoupper((string)$currency);
+        $symbol = $currency === 'NZD' ? 'NZ$' : '$';
+        return $symbol . number_format($amount / 100, 2);
+    }
 }
 
 $ref = trim($_GET['ref'] ?? '');
