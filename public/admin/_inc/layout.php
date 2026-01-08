@@ -8,7 +8,8 @@ function render_header($title)
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo htmlspecialchars($title); ?></title>
-        <link rel="stylesheet" href="/admin/admin.css">
+        <?php $cssVersion = file_exists(__DIR__ . '/../admin.css') ? filemtime(__DIR__ . '/../admin.css') : time(); ?>
+        <link rel="stylesheet" href="/admin/admin.css?v=<?php echo $cssVersion; ?>">
     </head>
     <body>
         <div class="admin-wrap">

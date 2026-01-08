@@ -136,11 +136,16 @@ if (!$pdo) {
     respond(500, 'Database not configured.');
 }
 
-$stmt = $pdo->prepare('SELECT * FROM orders WHERE order_ref = ? AND (LOWER(email) = ? OR email IS NULL OR email = "") LIMIT 1');
-$stmt->execute([$orderRef, $email]);
+$stmt = $pdo->prepare('SELECT * FROM orders WHERE order_ref = ? LIMIT 1');
+$stmt->execute([$orderRef]);
 $order = $stmt->fetch();
 if (!$order) {
     respond(404, 'Order not found.');
+}
+
+$storedEmail = strtolower(trim((string)($order['email'] ?? '')));
+if ($storedEmail !== '' && $storedEmail !== $email) {
+    respond(403, 'Email does not match this order. Use the email from your Stripe receipt.');
 }
 
 $itemsStmt = $pdo->prepare('SELECT product_name, quantity, unit_amount, line_total FROM order_items WHERE order_id = ?');
