@@ -112,13 +112,14 @@ switch ($event['type']) {
             $address = $customer['address'] ?? ($shipping['address'] ?? []);
             $paymentStatus = $session['payment_status'] ?? '';
             $status = $paymentStatus === 'paid' ? 'paid' : ($paymentStatus ?: 'pending');
+            $customerEmail = $customer['email'] ?? ($session['customer_email'] ?? '');
 
             $stmt = $pdo->prepare('UPDATE orders SET status = ?, stripe_session_id = ?, stripe_payment_intent_id = ?, email = ?, amount_total = ?, currency = ?, customer_name = ?, customer_phone = ?, shipping_address = ?, payment_status = ? WHERE order_ref = ?');
             $stmt->execute([
                 $status,
                 $session['id'] ?? '',
                 $session['payment_intent'] ?? '',
-                $customer['email'] ?? '',
+                $customerEmail,
                 $session['amount_total'] ?? 0,
                 $session['currency'] ?? 'nzd',
                 $customer['name'] ?? ($shipping['name'] ?? ''),
@@ -137,8 +138,15 @@ switch ($event['type']) {
         $session = $event['data']['object'] ?? [];
         $orderRef = $session['client_reference_id'] ?? '';
         if ($orderRef !== '') {
-            $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE order_ref = ?');
-            $stmt->execute(['expired', 'expired', $orderRef]);
+            $customer = $session['customer_details'] ?? [];
+            $customerEmail = $customer['email'] ?? ($session['customer_email'] ?? '');
+            if ($customerEmail !== '') {
+                $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ?, email = ? WHERE order_ref = ?');
+                $stmt->execute(['expired', 'expired', $customerEmail, $orderRef]);
+            } else {
+                $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE order_ref = ?');
+                $stmt->execute(['expired', 'expired', $orderRef]);
+            }
             send_order_notification($pdo, $orderRef);
         } elseif (!empty($session['id'])) {
             $stmt = $pdo->prepare('UPDATE orders SET status = ?, payment_status = ? WHERE stripe_session_id = ?');
