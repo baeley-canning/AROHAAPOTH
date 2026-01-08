@@ -13,7 +13,7 @@ const BrandStory = () => {
         <div className="space-y-5">
           <p className="section-kicker">Our story</p>
           <h2 className="section-title">
-            Born in a quiet valley in the lower North Island of Aotearoa.
+            Born in a quiet New Zealand valley, Aotearoa.
           </h2>
           <p className="text-sm md:text-base text-ink-500">
             We grow native New Zealand plants on our own land and partner with trusted,

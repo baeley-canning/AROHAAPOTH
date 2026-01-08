@@ -101,6 +101,121 @@ function format_address($address)
     return implode("\n", $lines);
 }
 
+function format_money($amount, $currency)
+{
+    $value = number_format(((int)$amount) / 100, 2);
+    $code = strtoupper((string)$currency);
+    return $code . ' ' . $value;
+}
+
+function build_origin()
+{
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    if ($host === '') {
+        return '';
+    }
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    return $scheme . '://' . $host;
+}
+
+function build_base_path()
+{
+    $scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+    $basePath = preg_replace('#/stripe$#', '', $scriptDir);
+    return rtrim($basePath, '/');
+}
+
+function send_order_notification($pdo, $orderRef)
+{
+    $notifyEmail = '';
+    if (defined('ORDER_NOTIFICATION_EMAIL')) {
+        $notifyEmail = trim((string)ORDER_NOTIFICATION_EMAIL);
+    }
+    if ($notifyEmail === '') {
+        $notifyEmail = 'hello@arohaapothecary.com';
+    }
+    if (!filter_var($notifyEmail, FILTER_VALIDATE_EMAIL)) {
+        return;
+    }
+
+    $stmt = $pdo->prepare('SELECT * FROM orders WHERE order_ref = ? LIMIT 1');
+    $stmt->execute([$orderRef]);
+    $order = $stmt->fetch();
+    if (!$order || !empty($order['admin_notified_at'])) {
+        return;
+    }
+
+    $itemStmt = $pdo->prepare('SELECT product_name, quantity, unit_amount, line_total FROM order_items WHERE order_id = ?');
+    $itemStmt->execute([(int)$order['id']]);
+    $items = $itemStmt->fetchAll();
+
+    $lines = [];
+    $lines[] = 'New order received.';
+    $lines[] = '';
+    $lines[] = 'Order reference: ' . $order['order_ref'];
+    if (!empty($order['status'])) {
+        $lines[] = 'Status: ' . $order['status'];
+    }
+    if (!empty($order['payment_status'])) {
+        $lines[] = 'Payment status: ' . $order['payment_status'];
+    }
+    $lines[] = 'Total: ' . format_money($order['amount_total'] ?? 0, $order['currency'] ?? 'NZD');
+
+    if (!empty($order['customer_name'])) {
+        $lines[] = 'Customer: ' . $order['customer_name'];
+    }
+    if (!empty($order['email'])) {
+        $lines[] = 'Email: ' . $order['email'];
+    }
+    if (!empty($order['customer_phone'])) {
+        $lines[] = 'Phone: ' . $order['customer_phone'];
+    }
+    if (!empty($order['shipping_address'])) {
+        $lines[] = '';
+        $lines[] = "Shipping address:\n" . $order['shipping_address'];
+    }
+
+    if ($items) {
+        $lines[] = '';
+        $lines[] = 'Items:';
+        foreach ($items as $item) {
+            $name = $item['product_name'] ?? 'Item';
+            $qty = (int)($item['quantity'] ?? 0);
+            $unit = format_money($item['unit_amount'] ?? 0, $order['currency'] ?? 'NZD');
+            $line = format_money($item['line_total'] ?? 0, $order['currency'] ?? 'NZD');
+            $lines[] = '- ' . $name . ' x' . $qty . ' (' . $unit . ') = ' . $line;
+        }
+    }
+
+    $origin = build_origin();
+    $basePath = build_base_path();
+    if ($origin !== '') {
+        $lines[] = '';
+        $lines[] = 'View order: ' . $origin . $basePath . '/admin/order.php?ref=' . urlencode($order['order_ref']);
+    }
+
+    $subject = 'New order ' . $order['order_ref'] . ' - ' . format_money($order['amount_total'] ?? 0, $order['currency'] ?? 'NZD');
+    $fromEmail = $notifyEmail;
+    if (defined('ORDER_FROM_EMAIL') && trim((string)ORDER_FROM_EMAIL) !== '') {
+        $fromEmail = trim((string)ORDER_FROM_EMAIL);
+    }
+    $headers = [
+        'From: Aroha Apothecary <' . $fromEmail . '>',
+        'Reply-To: ' . $fromEmail,
+        'Content-Type: text/plain; charset=UTF-8',
+    ];
+
+    $sent = @mail($notifyEmail, $subject, implode("\n", $lines), implode("\r\n", $headers));
+    if ($sent) {
+        try {
+            $updateStmt = $pdo->prepare('UPDATE orders SET admin_notified_at = NOW() WHERE order_ref = ?');
+            $updateStmt->execute([$order['order_ref']]);
+        } catch (Throwable $error) {
+            // Ignore update failure; email already sent.
+        }
+    }
+}
+
 switch ($event['type']) {
     case 'checkout.session.completed':
         $session = $event['data']['object'] ?? [];
@@ -126,6 +241,9 @@ switch ($event['type']) {
                 $paymentStatus,
                 $orderRef,
             ]);
+            if ($paymentStatus === 'paid') {
+                send_order_notification($pdo, $orderRef);
+            }
         }
         break;
     case 'checkout.session.expired':

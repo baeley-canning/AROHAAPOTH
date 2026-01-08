@@ -53,6 +53,12 @@
             linear-gradient(180deg, rgb(var(--linen-50)), rgb(var(--linen-100)));
     }
 
+    @media (max-width: 768px) {
+        html {
+            font-size: 18px;
+        }
+    }
+
     h1,
     h2,
     h3,

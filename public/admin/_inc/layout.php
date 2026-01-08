@@ -14,6 +14,7 @@ function render_header($title)
     <body>
         <div class="admin-wrap">
             <div class="admin-nav">
+                <a href="/">Home</a>
                 <a href="/admin/index.php">Dashboard</a>
                 <a href="/admin/products.php">Products</a>
                 <a href="/admin/orders.php">Orders</a>

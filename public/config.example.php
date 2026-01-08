@@ -23,6 +23,10 @@ define('ADMIN_PASSWORD', '');
 // Optional: link to webmail (used by /admin/email.php)
 define('EMAIL_PORTAL_URL', '');
 
+// Optional: order notification email (owner/admin)
+define('ORDER_NOTIFICATION_EMAIL', '');
+define('ORDER_FROM_EMAIL', '');
+
 // Stripe keys (optional here if you still use public/stripe/stripe-config.php)
 define('STRIPE_SECRET_KEY', 'sk_test_replace_me');
 define('STRIPE_WEBHOOK_SECRET', 'whsec_replace_me');

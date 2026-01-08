@@ -8,7 +8,7 @@ const NewsLetter = () => {
         From our valley to your home
       </h1>
       <p className="md:text-base text-ink-500 max-w-2xl">
-        Based in a quiet valley in the lower North Island of Aotearoa New Zealand.
+        Based in a quiet New Zealand valley in Aotearoa.
         Share your story for custom blends, or join the circle for seasonal releases.
       </p>
       <p className="text-sm text-ink-500 pb-6">
