@@ -48,6 +48,7 @@ if (!$secret && file_exists($configPath)) {
         $secret = STRIPE_SECRET_KEY;
     }
 }
+require_once __DIR__ . '/../_shared/notify.php';
 if (!$secret) {
     foreach (CONFIG_LOCATIONS as $level) {
         $path = dirname(__DIR__, $level) . '/stripe-config.php';
@@ -198,6 +199,9 @@ if ($pdo) {
         $orderRef = null;
         $orderId = null;
     }
+}
+if ($pdo && $orderRef) {
+    send_order_notification($pdo, $orderRef);
 }
 
 $successUrl = $successUrlBase;
