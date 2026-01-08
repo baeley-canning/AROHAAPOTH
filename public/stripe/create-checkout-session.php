@@ -200,7 +200,14 @@ if ($pdo) {
         $orderId = null;
     }
 }
-if ($pdo && $orderRef) {
+$notifyOnCreate = false;
+if (defined('ORDER_NOTIFY_ON_CREATE')) {
+    $notifyOnCreate = ORDER_NOTIFY_ON_CREATE;
+    if (!is_bool($notifyOnCreate)) {
+        $notifyOnCreate = filter_var((string)$notifyOnCreate, FILTER_VALIDATE_BOOLEAN);
+    }
+}
+if ($pdo && $orderRef && $notifyOnCreate) {
     send_order_notification($pdo, $orderRef);
 }
 

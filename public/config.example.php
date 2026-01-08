@@ -26,6 +26,7 @@ define('EMAIL_PORTAL_URL', '');
 // Optional: order notification email (owner/admin)
 define('ORDER_NOTIFICATION_EMAIL', '');
 define('ORDER_FROM_EMAIL', '');
+define('ORDER_NOTIFY_ON_CREATE', false);
 
 // Optional: customer emails (order confirmation/shipping)
 define('CUSTOMER_FROM_EMAIL', '');
